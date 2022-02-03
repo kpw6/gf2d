@@ -45,8 +45,8 @@ int main(int argc, char * argv[])
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         /*update things here*/
         SDL_GetMouseState(&mx,&my);
-        mf+=0.1;
-        if (mf >= 16.0)mf = 0;
+        //mf+=0.1;
+        //if (mf >= 16.0)mf = 0;
         
         
         gf2d_graphics_clear_screen();// clears drawing buffers

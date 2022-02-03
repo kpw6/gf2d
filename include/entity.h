@@ -8,6 +8,7 @@ typedef struct Entity_S {
 	Uint8 inuse; //defines if a entity is being used
 
 	Sprite* sprite; //graphic affiliated with entity.
+	float frame; //the frame the sprite is on
 
 	Vector2D position; //where the entity currently is in the world
 	Vector2D acceleration; //time it takes for entity to reach max velocity

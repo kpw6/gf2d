@@ -13,10 +13,11 @@ typedef struct  {
 static entityManager entity_manager = { 0 };
 
 void entity_system_close() {
-	for (int i = 0; i < entity_manager.entity_count; i++) {
+	int i;
+	for (i = 0; i < entity_manager.entity_count; i++) {
 		entity_free(&entity_manager.entity_list[i]);
 	}
-
+	free(entity_manager.entity_list);
 	slog("Entity system closed");
 }
 
@@ -36,6 +37,8 @@ Entity* entity_new() {
 	for (i = 0; i < entity_manager.entity_count; i++) {
 		if (!entity_manager.entity_list[i].inuse) {
 			entity_manager.entity_list[i].inuse = 1;
+			entity_manager.entity_list[i].scale.x = 1;
+			entity_manager.entity_list[i].scale.y = 1;
 			return (&entity_manager.entity_list[i]);
 		}
 	}
@@ -46,7 +49,7 @@ Entity* entity_new() {
 void entity_draw(Entity* self) {
 	if (!self) return;
 	if (!self->sprite) return;
-	gf2d_sprite_draw(self->sprite, self->position, NULL, NULL, NULL, NULL, NULL, 0);
+	gf2d_sprite_draw(self->sprite, self->position, NULL, NULL, NULL, NULL, NULL, self->frame);
 }
 
 void entity_draw_all() {
@@ -58,8 +61,14 @@ void entity_draw_all() {
 }
 
 void entity_free(Entity* self) {
-	if (!self) return;
-	free(self);
+	if (!self) {
+		slog("No entity to free");
+		return;
+	}
+	if (self->sprite) {
+		gf2d_sprite_free(self->sprite);
+	}
+	memset(self, 0, sizeof(self));
 }
 
 void entity_think(Entity* self) {
