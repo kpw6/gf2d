@@ -15,9 +15,13 @@ typedef struct Entity_S {
 	Vector2D velocity; //how fast the entity can move
 	Vector2D scale; //how big the entity will be
 
-	float radius; //radius for circular collision
+	float radius; //radius for circular collision detection
+	Vector2D min, max; //min and max are used for rectangular collision detection
+
 
 	void (*think)(struct Entity_S* self); //entity think function
+	void (*update)(struct Entity_S* self); //entity update function
+	void (*onTouch)(struct Entity_S* self, struct Entity_S* other); //entity ontouch function
 
 	Uint8 health; //health of the entity
 
@@ -61,5 +65,28 @@ void entity_think(Entity* self);
 * @brief updates all entity think functions
 */
 void entity_think_all();
+
+/*
+* @brief update function for entity
+* @param entity that is updating
+*/
+void entity_update(Entity* self);
+
+/*
+* @brief updates all entity update functions
+*/
+void entity_update_all();
+
+/*
+* @brief onTouch function for entity
+* @param entity that is doing the collision
+* @param entity that is being collided
+*/
+void entity_onTouch(Entity* self, Entity* other);
+
+/*
+* @brief test all entities for collision
+*/
+void entity_collision_tests();
 
 #endif

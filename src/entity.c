@@ -1,5 +1,6 @@
 #include "entity.h"
 #include "gf2d_sprite.h"
+#include "physics.h"
 
 #include "simple_logger.h"
 
@@ -39,6 +40,8 @@ Entity* entity_new() {
 			entity_manager.entity_list[i].inuse = 1;
 			entity_manager.entity_list[i].scale.x = 1;
 			entity_manager.entity_list[i].scale.y = 1;
+			entity_manager.entity_list[i].min = vector2d(0,0);
+			entity_manager.entity_list[i].max = vector2d(0,0);
 			return (&entity_manager.entity_list[i]);
 		}
 	}
@@ -80,6 +83,40 @@ void entity_think_all() {
 	for (int i = 0; i < entity_manager.entity_count; i++) {
 		if (entity_manager.entity_list[i].inuse) {
 			entity_think(&entity_manager.entity_list[i]);
+		}
+	}
+}
+
+void entity_update(Entity* self) {
+	if (!self) return;
+	if (self->update) self->update(self);
+}
+
+void entity_update_all() {
+	for (int i = 0; i < entity_manager.entity_count; i++) {
+		if (entity_manager.entity_list[i].inuse) {
+			entity_update(&entity_manager.entity_list[i]);
+		}
+	}
+}
+
+void entity_onTouch(Entity* self, Entity* other) {
+	if (!self) return;
+	if (!other) return;
+	if (self->onTouch) self->onTouch(self, other);
+	if (other->onTouch) other->onTouch(other, self);
+}
+
+void entity_collision_tests() {
+	for (int i = 0; i < entity_manager.entity_count; i++) {
+		for (int j = entity_manager.entity_count; j > 0; j--) {
+			if (entity_manager.entity_list[i].inuse && entity_manager.entity_list[j].inuse && j != i) {
+				if (ent_rect_collision(&entity_manager.entity_list[i], &entity_manager.entity_list[j])) {
+					slog("collision successfull");
+					entity_onTouch(&entity_manager.entity_list[i], &entity_manager.entity_list[j]);
+				}
+			}
+			continue;
 		}
 	}
 }

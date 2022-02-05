@@ -5,6 +5,7 @@
 
 #include "entity.h"
 #include "player.h"
+#include "enemy.h"
 
 int main(int argc, char * argv[])
 {
@@ -15,7 +16,7 @@ int main(int argc, char * argv[])
     
     int mx,my;
     float mf = 0;
-    Sprite *mouse;
+    Entity *mouse, *other;
     Vector4D mouseColor = {255,100,255,200};
     
     /*program initializtion*/
@@ -38,6 +39,7 @@ int main(int argc, char * argv[])
     /*demo setup*/
     //sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = player_new();
+    other = enemy_new();
     /*main game loop*/
     while(!done)
     {
@@ -55,6 +57,7 @@ int main(int argc, char * argv[])
             //gf2d_sprite_draw_image(sprite,vector2d(0,0));
             
             entity_think_all();
+            entity_update_all();
             entity_draw_all();
             //UI elements last
             /*
@@ -68,6 +71,7 @@ int main(int argc, char * argv[])
                 &mouseColor,
                 (int)mf);
                 */
+            entity_collision_tests();
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
