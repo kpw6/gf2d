@@ -3,6 +3,7 @@
 #include "simple_logger.h"
 
 #include "animations.h"
+#include "physics.h"
 
 #include "enemy.h"
 #include "gf2d_sprite.h"
@@ -10,7 +11,11 @@
 static int lastPress = 0;
 
 void enemy_think(Entity* self) {
-
+	const Uint8* keys;
+	keys = SDL_GetKeyboardState(NULL);
+	if (keys[SDL_SCANCODE_H]) {
+		entity_free(self);
+	}
 
 }
 
@@ -19,10 +24,28 @@ void enemy_update(Entity* self) {
 }
 
 void enemy_onTouch(Entity* self, Entity* other) {
-	vector2d_add(other->position, other->position, vector2d(-1, 0));
-	vector2d_add(other->min, other->position, vector2d(-1, 0));
-	vector2d_add(other->max, other->position, vector2d(-1, 0));
-	slog("%i is this position", self->position.x);
+	const Uint8* keys;
+	keys = SDL_GetKeyboardState(NULL);
+
+	if (other->min.x < self->max.x) {
+		simple_movement(other, -1, 0);
+	}
+	if (other->max.x > self->min.x) {
+		simple_movement(other, 1, 0);
+	}
+	if (other->max.y > self->min.y) {
+		simple_movement(other, 0, 1);
+	}
+	if (other->min.y < self->max.y) {
+		simple_movement(other, 0, -1);
+	}
+
+	if (keys[SDL_SCANCODE_A]) {
+		slog("a was pressed");
+	}
+
+	
+	
 }
 
 
@@ -38,8 +61,8 @@ Entity* enemy_new() {
 		slog("Failed to assign sprite to player");
 	}
 	enemy->position = vector2d(300, 300);
-	vector2d_add(enemy->min, enemy->position, vector2d(-45, -45));
-	vector2d_add(enemy->max, enemy->position, vector2d(45, 45));
+	vector2d_add(enemy->min, enemy->position, vector2d(-10, -10));
+	vector2d_add(enemy->max, enemy->position, vector2d(18, 10));
 	enemy->frame = 0;
 	enemy->think = enemy_think;
 	enemy->update = enemy_update;

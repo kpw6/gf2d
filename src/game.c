@@ -38,8 +38,8 @@ int main(int argc, char * argv[])
     
     /*demo setup*/
     //sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
-    mouse = player_new();
     other = enemy_new();
+    mouse = player_new();
     /*main game loop*/
     while(!done)
     {
@@ -59,19 +59,8 @@ int main(int argc, char * argv[])
             entity_think_all();
             entity_update_all();
             entity_draw_all();
-            //UI elements last
-            /*
-            gf2d_sprite_draw(
-                mouse,
-                vector2d(mx,my),
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                &mouseColor,
-                (int)mf);
-                */
             entity_collision_tests();
+
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
