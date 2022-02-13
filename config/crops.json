@@ -1,0 +1,13 @@
+{
+  "CROP_SQUIRTLE": {
+    "image": "images/SquirtlePlant.png"
+  },
+  "CROP_HOPPIP": {
+    "image": "images/trainer.png"
+  },
+
+  "CROP_ORAN_BERRY": {
+    "image": "images/trainer.png"
+  }
+
+}

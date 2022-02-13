@@ -112,7 +112,7 @@ void entity_collision_tests() {
 		for (int j = entity_manager.entity_count; j > 0; j--) {
 			if (entity_manager.entity_list[i].inuse && entity_manager.entity_list[j].inuse && j != i) {
 				if (ent_rect_collision(&entity_manager.entity_list[i], &entity_manager.entity_list[j])) {
-					slog("collision successfull");
+					//slog("collision successfull");
 					entity_onTouch(&entity_manager.entity_list[i], &entity_manager.entity_list[j]);
 				}
 			}

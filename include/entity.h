@@ -3,6 +3,14 @@
 
 #include "gf2d_sprite.h"
 
+typedef enum {
+
+	CROP_SQUIRTLE,
+	CROP_HOPPIP,
+	CROP_ORAN_BERRY
+
+}cropType;
+
 typedef struct Entity_S {
 
 	Uint8 inuse; //defines if a entity is being used
@@ -24,6 +32,9 @@ typedef struct Entity_S {
 	void (*onTouch)(struct Entity_S* self, struct Entity_S* other); //entity ontouch function
 
 	Uint8 health; //health of the entity
+
+	cropType type; /*type of crop to create*/
+
 
 }Entity;
 

@@ -28,16 +28,16 @@ void enemy_onTouch(Entity* self, Entity* other) {
 	keys = SDL_GetKeyboardState(NULL);
 
 	if (other->min.x < self->max.x) {
-		simple_movement(other, -1, 0);
+		simple_movement(other, -other->velocity.x, 0);
 	}
 	if (other->max.x > self->min.x) {
-		simple_movement(other, 1, 0);
+		simple_movement(other, other->velocity.x, 0);
 	}
 	if (other->max.y > self->min.y) {
-		simple_movement(other, 0, 1);
+		simple_movement(other, 0, other->velocity.y);
 	}
 	if (other->min.y < self->max.y) {
-		simple_movement(other, 0, -1);
+		simple_movement(other, 0, -other->velocity.y);
 	}
 
 	if (keys[SDL_SCANCODE_A]) {

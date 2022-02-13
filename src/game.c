@@ -6,6 +6,10 @@
 #include "entity.h"
 #include "player.h"
 #include "enemy.h"
+#include "crops.h"
+
+#include "tileset.h"
+#include "tilemap.h"
 
 int main(int argc, char * argv[])
 {
@@ -13,10 +17,11 @@ int main(int argc, char * argv[])
     int done = 0;
     const Uint8 * keys;
     Sprite *sprite;
+    tileMap* map;
     
     int mx,my;
     float mf = 0;
-    Entity *mouse, *other;
+    Entity* mouse, * other, * crop;
     Vector4D mouseColor = {255,100,255,200};
     
     /*program initializtion*/
@@ -32,6 +37,7 @@ int main(int argc, char * argv[])
         vector4d(0,0,0,255),
         0);
     gf2d_graphics_set_frame_delay(16);
+    tileSet_manager_init(16);
     gf2d_sprite_init(1024);
     entity_system_init(1024);
     SDL_ShowCursor(SDL_DISABLE);
@@ -40,6 +46,8 @@ int main(int argc, char * argv[])
     //sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     other = enemy_new();
     mouse = player_new();
+    //map = tileMap_load("levels/testlevel.json");
+    crop = crops_new("config/crops.json", CROP_SQUIRTLE, vector2d(200, 100));
     /*main game loop*/
     while(!done)
     {
@@ -55,6 +63,7 @@ int main(int argc, char * argv[])
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
             //gf2d_sprite_draw_image(sprite,vector2d(0,0));
+            //tileMap_draw(map);
             
             entity_think_all();
             entity_update_all();

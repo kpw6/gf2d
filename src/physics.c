@@ -6,10 +6,6 @@ void simple_movement(Entity* self, float speedx, float speedy) {
     self->max.x += speedx;
     self->min.y += speedy;
     self->max.y += speedy;
-    /*
-    vector2d_add(self->min, self->position, vector2d(speedx, speedy));
-    vector2d_add(self->max, self->position, vector2d(speedx, speedy));
-    */
 }
 
 Uint8 ent_rect_collision(Entity* self, Entity* other) {
