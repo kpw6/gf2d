@@ -2,51 +2,32 @@
 
 #include "simple_logger.h"
 #include "simple_json.h"
+#include "gfc_audio.h"
 
 #include "animations.h"
 #include "physics.h"
 
 #include "player.h"
+#include "monsters.h"
 #include "gf2d_sprite.h"
 
-static int lastPress = 0;
-
 void player_think(Entity* self) {
-
-	if (!self) return;
+	Entity* monster;
+	Vector2D mPosition;
 	const Uint8* keys;
 	keys = SDL_GetKeyboardState(NULL);
-
-	if (keys[SDL_SCANCODE_RIGHT]) {
-
-		player_animation_movement(self, lastPress);
-
-		simple_movement(self, self->velocity.x, 0);
-		lastPress = 0;
+	
+	if (!self) return;
+	if (self->control) {
+		player_movement(self);
+		if (keys[SDL_SCANCODE_T]) {
+		gfc_sound_play(gfc_sound_load("sounds/PokebOpen.mp3", 1, 0), 0, 1, -1, -1);
+		self->control = 0;
+		vector2d_add(mPosition, self->position, vector2d(100, 40));
+		monster = monsters_new("config/entities.json", MONSTER_SQUIRTLE, mPosition);
+		monster->control = 1;
 	}
-	else if (keys[SDL_SCANCODE_LEFT]) {
 
-		player_animation_movement(self, lastPress);
-
-		simple_movement(self, -self->velocity.x, 0);
-		lastPress = 1;
-	}
-	else if (keys[SDL_SCANCODE_DOWN]) {
-
-		player_animation_movement(self, lastPress);
-
-		simple_movement(self, 0, self->velocity.y);
-		lastPress = 2;
-	}
-	else if (keys[SDL_SCANCODE_UP]) {
-
-		player_animation_movement(self, lastPress);
-
-		simple_movement(self, 0, -self->velocity.y);
-		lastPress = 3;
-	}
-	else {
-		player_animation_return_idle(self, lastPress);
 	}
 }
 
@@ -54,7 +35,9 @@ void player_update(Entity* self) {
 	if (!self) return;
 }
 
-void player_onTouch(Entity* self) {
+void player_onTouch(Entity* self, Entity* other) {
+	pushback_entity(other, self);
+
 }
 
 Entity* player_new() {
@@ -87,14 +70,18 @@ Entity* player_new() {
 		slog("Failed to assign sprite to player");
 	}
 
+	player->control = 1;
 	player->velocity = vector2d(wspeed, wspeed);
 	player->position = vector2d(100, 100);
 	vector2d_add(player->min, player->position, vector2d(-20, -20));
 	vector2d_add(player->max, player->position, vector2d(20, 20));
+	//player->radius = 1;
 	player->frame = 0;
 	player->think = player_think;
 	player->update = player_update;
-	//player->onTouch = player_onTouch;
+	player->onTouch = player_onTouch;
+
+	player->isPlayer = 1;
 
 	slog("%i walk speed", width);
 

@@ -1,12 +1,14 @@
 {
-  "player": 
-    {
-      "image": "images/trainer.png",
-      "walkspeed": 2,
-      "runspeed": 3,
-      "width": 64,
-      "length": 64,
-      "columns": 4,
-      "position": [10, 10]
-    }
+  "player": {
+    "image": "images/trainer.png",
+    "walkspeed": 1,
+    "runspeed": 3,
+    "width": 64,
+    "length": 64,
+    "columns": 4,
+    "position": [ 10, 10 ]
+  },
+  "MONSTER_SQUIRTLE": {
+    "image": "images/Squirtle.png"
+  }
 }

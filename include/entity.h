@@ -11,19 +11,30 @@ typedef enum {
 
 }cropType;
 
+typedef enum {
+
+	MONSTER_SQUIRTLE,
+	MONSTER_HOPPIP
+
+}monsterType;
+
 typedef struct Entity_S {
 
 	Uint8 inuse; //defines if a entity is being used
+	Uint8 solid; //if true this entity should clip the world
+	Uint8 active; //checks if entity is in memory just not on screen
+	Uint8 control; //check if entity is in control.
+	Uint8 isPlayer; //a tag for the player to wear.
 
 	Sprite* sprite; //graphic affiliated with entity.
+
 	float frame; //the frame the sprite is on
+	float radius; //radius for circular collision detection
 
 	Vector2D position; //where the entity currently is in the world
 	Vector2D acceleration; //time it takes for entity to reach max velocity
 	Vector2D velocity; //how fast the entity can move
 	Vector2D scale; //how big the entity will be
-
-	float radius; //radius for circular collision detection
 	Vector2D min, max; //min and max are used for rectangular collision detection
 
 
@@ -31,7 +42,7 @@ typedef struct Entity_S {
 	void (*update)(struct Entity_S* self); //entity update function
 	void (*onTouch)(struct Entity_S* self, struct Entity_S* other); //entity ontouch function
 
-	Uint8 health; //health of the entity
+	Uint32 health; //health of the entity
 
 	cropType type; /*type of crop to create*/
 
@@ -99,5 +110,10 @@ void entity_onTouch(Entity* self, Entity* other);
 * @brief test all entities for collision
 */
 void entity_collision_tests();
+
+/*
+* @brief will retrieve the player entity
+*/
+Entity *entity_isPlayer();
 
 #endif

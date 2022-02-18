@@ -51,3 +51,55 @@ void player_animation_return_idle(Entity* self, int lastKey) {
 		break;
 	}
 }
+
+void monster_animation_movement(Entity* self, int lastKey) {
+	if (!self) return;
+
+	switch (lastKey) {
+	case 0:
+
+		if (self->frame < 6) self->frame = 6;
+		self->frame += .1;
+		if (self->frame >= 8) self->frame = 6;
+
+		break;
+	case 1:
+
+		if (self->frame < 3) self->frame = 3;
+		self->frame += .1;
+		if (self->frame >= 6) self->frame = 3;
+
+		break;
+	case 2:
+
+		self->frame += .1;
+		if (self->frame >= 3) self->frame = 0;
+
+		break;
+	case 3:
+
+		if (self->frame < 9) self->frame = 9;
+		self->frame += .1;
+		if (self->frame >= 11) self->frame = 9;
+
+		break;
+	}
+
+}
+
+void monster_animation_return_idle(Entity* self, int lastKey) {
+	switch (lastKey) {
+	case 0:
+		self->frame = 6;
+		break;
+	case 1:
+		self->frame = 3;
+		break;
+	case 2:
+		self->frame = 0;
+		break;
+	case 3:
+		self->frame = 9;
+		break;
+	}
+}

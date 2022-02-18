@@ -11,11 +11,20 @@
 static int lastPress = 0;
 
 void enemy_think(Entity* self) {
-	const Uint8* keys;
-	keys = SDL_GetKeyboardState(NULL);
-	if (keys[SDL_SCANCODE_H]) {
-		entity_free(self);
+	SDL_Event event;
+	while (SDL_PollEvent(&event)) {
+	switch (event.type) {
+	case SDL_KEYDOWN:
+		switch (event.key.keysym.sym) {
+		case SDLK_h:
+			if (self->active) self->active = 0;
+			else self->active = 1;
+			break;
+		}
+	default:
+		break;
 	}
+}
 
 }
 
@@ -26,20 +35,7 @@ void enemy_update(Entity* self) {
 void enemy_onTouch(Entity* self, Entity* other) {
 	const Uint8* keys;
 	keys = SDL_GetKeyboardState(NULL);
-
-	if (other->min.x < self->max.x) {
-		simple_movement(other, -other->velocity.x, 0);
-	}
-	if (other->max.x > self->min.x) {
-		simple_movement(other, other->velocity.x, 0);
-	}
-	if (other->max.y > self->min.y) {
-		simple_movement(other, 0, other->velocity.y);
-	}
-	if (other->min.y < self->max.y) {
-		simple_movement(other, 0, -other->velocity.y);
-	}
-
+	pushback_entity(self, other);
 	if (keys[SDL_SCANCODE_A]) {
 		slog("a was pressed");
 	}
@@ -63,6 +59,7 @@ Entity* enemy_new() {
 	enemy->position = vector2d(300, 300);
 	vector2d_add(enemy->min, enemy->position, vector2d(-10, -10));
 	vector2d_add(enemy->max, enemy->position, vector2d(18, 10));
+	//enemy->radius = 1;
 	enemy->frame = 0;
 	enemy->think = enemy_think;
 	enemy->update = enemy_update;

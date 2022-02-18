@@ -17,4 +17,8 @@ void player_animation_movement(Entity* self, int lastKey);
 * @param the int that represents what button was last pressed
 */
 void player_animation_return_idle(Entity* self, int lastKey);
+
+void monster_animation_movement(Entity* self, int lastKey);
+
+void monster_animation_return_idle(Entity* self, int lastkey);
 #endif
