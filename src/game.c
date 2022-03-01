@@ -2,7 +2,9 @@
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
 #include "simple_logger.h"
+
 #include "gfc_audio.h"
+#include "gfc_input.h"
 
 #include "entity.h"
 #include "player.h"
@@ -24,6 +26,7 @@ int main(int argc, char * argv[])
     float mf = 0;
     Entity* mouse, * other, * crop;
     Vector4D mouseColor = {255,100,255,200};
+    Input in;
     
     /*program initializtion*/
     init_logger("gf2d.log");
@@ -38,17 +41,16 @@ int main(int argc, char * argv[])
         vector4d(0,0,0,255),
         0);
     gf2d_graphics_set_frame_delay(16);
+    gfc_input_init("config/inputs.json");
     gfc_audio_init(128, 2, 2, 2, 1, 1);
-    tileSet_manager_init(16);
     gf2d_sprite_init(1024);
     entity_system_init(1024);
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
-    //sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
+    sprite = gf2d_sprite_load_image("images/backgrounds/Test_Area.png");
     other = enemy_new();
     mouse = player_new();
-    //map = tileMap_load("levels/testlevel.json");
     crop = crops_new("config/crops.json", CROP_SQUIRTLE, vector2d(200, 100));
     /*main game loop*/
     while(!done)
@@ -57,15 +59,13 @@ int main(int argc, char * argv[])
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         /*update things here*/
         SDL_GetMouseState(&mx,&my);
-        //mf+=0.1;
-        //if (mf >= 16.0)mf = 0;
+
+        gfc_input_update();
         
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
-            //gf2d_sprite_draw_image(sprite,vector2d(0,0));
-            //tileMap_draw(map);
             
             entity_think_all();
             entity_update_all();

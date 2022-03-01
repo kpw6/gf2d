@@ -1,6 +1,8 @@
 #include "simple_json.h"
 #include "simple_logger.h"
 
+#include "gfc_input.h"
+
 #include "crops.h"
 
 static float f = 0;
@@ -20,7 +22,7 @@ void crops_think(Entity* crop) {
 void crops_ontouch(Entity* self, Entity* other) {
 	const Uint8* keys;
 	keys = SDL_GetKeyboardState(NULL);
-	if (keys[SDL_SCANCODE_G] && self->frame == 2) {
+	if (gfc_input_command_pressed("collect") && self->frame == 2) {
 		entity_free(self);
 	}
 }
@@ -43,8 +45,6 @@ Entity* crops_new(char* filename, cropType type, Vector2D position) {
 	crop->onTouch = crops_ontouch;
 
 	crop->position = position;
-	crop->scale.x = 2;
-	crop->scale.y = 2;
 	vector2d_add(crop->min, crop->position, vector2d(-20, -20));
 	vector2d_add(crop->max, crop->position, vector2d(20, 20));
 

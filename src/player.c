@@ -2,14 +2,17 @@
 
 #include "simple_logger.h"
 #include "simple_json.h"
-#include "gfc_audio.h"
 
 #include "animations.h"
 #include "physics.h"
 
+#include "gfc_input.h"
+
 #include "player.h"
 #include "monsters.h"
+
 #include "gf2d_sprite.h"
+#include "gfc_audio.h"
 
 void player_think(Entity* self) {
 	Entity* monster;
@@ -20,12 +23,13 @@ void player_think(Entity* self) {
 	if (!self) return;
 	if (self->control) {
 		player_movement(self);
-		if (keys[SDL_SCANCODE_T]) {
-		gfc_sound_play(gfc_sound_load("sounds/PokebOpen.mp3", 1, 0), 0, 1, -1, -1);
-		self->control = 0;
-		vector2d_add(mPosition, self->position, vector2d(100, 40));
-		monster = monsters_new("config/entities.json", MONSTER_SQUIRTLE, mPosition);
-		monster->control = 1;
+		if (gfc_input_command_released("release")) {
+			slog("button pressed");
+			gfc_sound_play(gfc_sound_load("sounds/PokebOpen.mp3", 1, 0), 0, 1, -1, -1);
+			self->control = 0;
+			vector2d_add(mPosition, self->position, vector2d(100, 40));
+			monster = monsters_new("config/entities.json", MONSTER_SQUIRTLE, mPosition);
+			monster->control = 1;
 	}
 
 	}
@@ -36,7 +40,7 @@ void player_update(Entity* self) {
 }
 
 void player_onTouch(Entity* self, Entity* other) {
-	pushback_entity(other, self);
+	//pushback_entity(other, self);
 
 }
 
@@ -69,6 +73,7 @@ Entity* player_new() {
 	if (!player->sprite) {
 		slog("Failed to assign sprite to player");
 	}
+
 
 	player->control = 1;
 	player->velocity = vector2d(wspeed, wspeed);

@@ -17,6 +17,7 @@ typedef struct {
 	Uint32 tile_height;
 	Uint32 tile_count;
 
+	Uint32 tag; //This is used to differentiate the properties of a tile.
 }tileSet;
 
 /*

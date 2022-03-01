@@ -2,6 +2,7 @@
 #include "simple_json.h"
 
 #include "gfc_audio.h"
+#include "gfc_input.h"
 
 #include "monsters.h"
 #include "physics.h"
@@ -15,7 +16,7 @@ void monsters_think(Entity* self) {
 	keys = SDL_GetKeyboardState(NULL);
 	if (self->control) {
 		monster_movement(self);
-		if (keys[SDL_SCANCODE_R]) {
+		if (gfc_input_command_released("retrieve")) {
 			gfc_sound_play(gfc_sound_load("sounds/PokebReturn.mp3", 1, 0), 0, 1, -1, -1);
 			player->control = 1;
 			entity_free(self);

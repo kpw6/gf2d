@@ -7,6 +7,7 @@ typedef struct {
 
 	TextLine filename;
 	tileSet* tileset;
+
 	Uint32* tilemap;
 	Uint32 tileMap_count;
 	Uint32 tileMap_width;

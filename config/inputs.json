@@ -1,0 +1,17 @@
+{
+  "commands": [
+    {
+      "command": "release",
+      "keys": [ "t" ]
+    },
+    {
+      "command": "retrieve",
+      "keys": [ "r" ]
+    },
+    {
+      "command": "collect",
+      "keys": ["e"]
+    }
+  ]
+    
+}
