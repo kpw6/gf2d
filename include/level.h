@@ -30,6 +30,8 @@ void level_free(level *lev);
 */
 level *level_load(char* filename);
 
+void level_unload();
+
 /*
 * @brief creates a new level
 */

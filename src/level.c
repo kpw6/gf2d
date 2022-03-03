@@ -2,6 +2,7 @@
 #include "simple_logger.h"
 
 #include "level.h"
+#include "borders.h"
 
 typedef struct {
 
@@ -15,10 +16,10 @@ static levelManager LM = { 0 };
 void level_manager_close() {
 	int i;
 	for (i = 0; i < LM.level_count; i++) {
-		tileSet_free(&LM.level_list[i]);
+		level_free(&LM.level_list[i]);
 	}
 	free(LM.level_list);
-	slog("Tile set manager closed");
+	slog("level manager closed");
 }
 
 void level_manager_init(Uint32 maxLevels) {
@@ -36,7 +37,10 @@ void level_manager_init(Uint32 maxLevels) {
 
 void level_free(level* lev) {
 	if (!lev) return;
-	free(lev);
+	if (lev->image) {
+		gf2d_sprite_free(lev->image);
+	}
+	memset(lev, 0, sizeof(level));
 
 }
 
@@ -83,31 +87,29 @@ void level_draw(level* lev) {
 	if (!lev) return;
 	gf2d_sprite_draw_image(lev->image, vector2d(0, 0));
 	entity_draw_all();
+	borders_draw_all();
 
 }
 
-void border_onTouch(Entity* self, Entity* other) {
-	pushback_entity(self, other);
-}
 void level_load_borders(SJson* json) {
-	SJson* borders, *border, *min, *max;
-	Entity *bord;
+	SJson* borders, *bordert, *min, *max;
+	border *bord;
 	float x, y;
-	int count;
+	int count, type;
 	borders = sj_object_get_value(json, "borders");
 	if (!borders) {
 		slog("no borders for you");
 	}
 	count = sj_array_get_count(borders);
 	for (int i = 0; i < count; i++) {
-		border = sj_array_get_nth(borders, i);
-		if (!border) continue;
-		bord = entity_new();
+		bordert = sj_array_get_nth(borders, i);
+		if (!bordert) continue;
+		bord = border_new();
 		if (!bord) {
 			slog("couldn't create border");
 			return;
 		}
-		min = sj_object_get_value(border, "min");
+		min = sj_object_get_value(bordert, "min");
 		if (!min) {
 			slog("no min found");
 		}
@@ -116,16 +118,15 @@ void level_load_borders(SJson* json) {
 		slog("this works %f", y);
 		slog("x = %f", x);
 		bord->min = vector2d(x, y);
-		max = sj_object_get_value(border, "max");
+		max = sj_object_get_value(bordert, "max");
 		sj_get_float_value(sj_array_get_nth(max, 0), &x);
 		sj_get_float_value(sj_array_get_nth(max, 1), &y);
 		slog("this works %f", y);
 		slog("x = %f", x);
 		bord->max = vector2d(x, y);
-		bord->position = vector2d(0, 0);
-		bord->sprite = gf2d_sprite_load_all("images/perlin-grey.png", 1, 1, 1);
-		bord->frame = 1;
-		bord->onTouch = border_onTouch;
+		sj_get_integer_value(sj_object_get_value(bordert, "type"), &type);
+		bord->type = (borderType)type;
+
 	}
 	free(borders);
 	

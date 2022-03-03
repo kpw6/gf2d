@@ -10,6 +10,7 @@
 
 #include "player.h"
 #include "monsters.h"
+#include "borders.h"
 
 #include "gf2d_sprite.h"
 #include "gfc_audio.h"
@@ -37,6 +38,7 @@ void player_think(Entity* self) {
 
 void player_update(Entity* self) {
 	if (!self) return;
+	borders_update(self);
 }
 
 void player_onTouch(Entity* self, Entity* other) {
@@ -77,7 +79,7 @@ Entity* player_new() {
 
 	player->control = 1;
 	player->velocity = vector2d(wspeed, wspeed);
-	player->position = vector2d(100, 150);
+	player->position = vector2d(100, 200);
 	vector2d_add(player->min, player->position, vector2d(-20, -20));
 	vector2d_add(player->max, player->position, vector2d(20, 20));
 	//player->radius = 1;

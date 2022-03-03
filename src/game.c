@@ -11,10 +11,8 @@
 #include "enemy.h"
 #include "crops.h"
 
-#include "tileset.h"
-#include "tilemap.h"
-
 #include "level.h"
+#include "borders.h"
 
 int main(int argc, char * argv[])
 {
@@ -22,7 +20,6 @@ int main(int argc, char * argv[])
     int done = 0;
     const Uint8 * keys;
     Sprite *sprite;
-    tileMap* map;
     level *lev;
     
     int mx,my;
@@ -48,6 +45,7 @@ int main(int argc, char * argv[])
     gfc_audio_init(128, 2, 2, 2, 1, 1);
     gf2d_sprite_init(1024);
     entity_system_init(1024);
+    borders_init(64);
     level_manager_init(32);
     SDL_ShowCursor(SDL_DISABLE);
 

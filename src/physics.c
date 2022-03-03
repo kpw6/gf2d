@@ -1,5 +1,6 @@
 #include "entity.h"
 #include "animations.h"
+#include "borders.h"
 
 static int lastPress = 0; //This just to remember the place for animation
 
@@ -23,6 +24,21 @@ void pushback_entity(Entity* self, Entity* other) {
 	}
 	if (other->min.y < self->max.y) {
 		simple_movement(other, 0, -other->velocity.y);
+	}
+}
+
+void pushback_entity_on_border(Entity* self, border* bord) {
+	if (self->min.x < bord->max.x) {
+		simple_movement(self, -self->velocity.x, 0);
+	}
+	if (self->max.x > bord->min.x) {
+		simple_movement(self, self->velocity.x, 0);
+	}
+	if (self->max.y > bord->min.y) {
+		simple_movement(self, 0, self->velocity.y);
+	}
+	if (self->min.y < bord->max.y) {
+		simple_movement(self, 0, -self->velocity.y);
 	}
 }
 
@@ -106,6 +122,11 @@ Uint8 ent_rect_collision(Entity* self, Entity* other) {
 }
 
 Uint8 ent_circ_collision(Entity* self, Entity* other) {
-  
-    //return (vector2d_magnitude_squared(vector2d(A.x - B.x, A.y - B.y), vector2d(A.r);
+
+	//return (vector2d_magnitude_squared(vector2d(A.x - B.x, A.y - B.y), vector2d(A.r);
+}
+
+Uint8 ent_border_collision(Entity * self, border *other) {
+	return (self->min.x <= other->max.x && self->max.x >= other->min.x) &&
+			(self->min.y <= other->max.y && self->max.y >= other->min.y);
 }
