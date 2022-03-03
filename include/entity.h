@@ -116,4 +116,10 @@ void entity_collision_tests();
 */
 Entity *entity_isPlayer();
 
+/*
+* @brief this will layer the entities properly
+* 
+*/
+void entity_layer_sort();
+
 #endif

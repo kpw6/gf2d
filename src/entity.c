@@ -132,3 +132,17 @@ Entity* entity_isPlayer() {
 		}
 	}
 }
+
+void entity_layer_sort() {
+	Entity temp;
+	for (int i = 0; i < entity_manager.entity_count; i++) {
+		for (int j = 0; j < entity_manager.entity_count - i - 1; j++) {
+			if (entity_manager.entity_list[j].position.y > entity_manager.entity_list[j+1].position.y) {
+				temp = entity_manager.entity_list[j];
+				entity_manager.entity_list[j] = entity_manager.entity_list[j + 1];
+				entity_manager.entity_list[j + 1] = temp;
+			}
+			continue;
+		}
+	}
+}

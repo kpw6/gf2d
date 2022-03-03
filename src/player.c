@@ -77,7 +77,7 @@ Entity* player_new() {
 
 	player->control = 1;
 	player->velocity = vector2d(wspeed, wspeed);
-	player->position = vector2d(100, 100);
+	player->position = vector2d(100, 150);
 	vector2d_add(player->min, player->position, vector2d(-20, -20));
 	vector2d_add(player->max, player->position, vector2d(20, 20));
 	//player->radius = 1;

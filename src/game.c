@@ -14,6 +14,8 @@
 #include "tileset.h"
 #include "tilemap.h"
 
+#include "level.h"
+
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
@@ -21,6 +23,7 @@ int main(int argc, char * argv[])
     const Uint8 * keys;
     Sprite *sprite;
     tileMap* map;
+    level *lev;
     
     int mx,my;
     float mf = 0;
@@ -45,7 +48,10 @@ int main(int argc, char * argv[])
     gfc_audio_init(128, 2, 2, 2, 1, 1);
     gf2d_sprite_init(1024);
     entity_system_init(1024);
+    level_manager_init(32);
     SDL_ShowCursor(SDL_DISABLE);
+
+    lev = level_load("levels/testlevel.json");
     
     /*demo setup*/
     sprite = gf2d_sprite_load_image("images/backgrounds/Test_Area.png");
@@ -62,14 +68,13 @@ int main(int argc, char * argv[])
 
         gfc_input_update();
         
-        
+        entity_layer_sort();
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
-            
+            level_draw(lev);
             entity_think_all();
             entity_update_all();
-            entity_draw_all();
             entity_collision_tests();
 
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
