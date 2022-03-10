@@ -1,0 +1,11 @@
+{
+  "bubble": {
+    "type": "bubble",
+    "damage": 10,
+    "speed": 3,
+    "image": "images/attacks/bubbles.png",
+    "width": 32,
+    "height": 32,
+    "frames": 2
+  }
+}

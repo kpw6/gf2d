@@ -13,6 +13,7 @@
 
 #include "level.h"
 #include "borders.h"
+#include "timer.h"
 
 int main(int argc, char * argv[])
 {
@@ -63,6 +64,8 @@ int main(int argc, char * argv[])
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         /*update things here*/
         SDL_GetMouseState(&mx,&my);
+
+        timer_update();
 
         gfc_input_update();
         

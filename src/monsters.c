@@ -5,6 +5,7 @@
 #include "gfc_input.h"
 
 #include "monsters.h"
+#include "attacks.h"
 #include "physics.h"
 
 
@@ -21,6 +22,9 @@ void monsters_think(Entity* self) {
 			player->control = 1;
 			entity_free(self);
 
+		}
+		if (gfc_input_command_pressed("attack")) {
+			attack_new("config/attacks.json", "bubble", vector2d(self->position.x + 40, self->position.y));
 		}
 	}
 }

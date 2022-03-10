@@ -10,7 +10,11 @@
     },
     {
       "command": "collect",
-      "keys": ["e"]
+      "keys": [ "e" ]
+    },
+    {
+      "command": "attack",
+      "keys": ["f"]
     }
   ]
     

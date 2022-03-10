@@ -7,7 +7,7 @@
     "length": 64,
     "columns": 4,
     "position": [ 10, 10 ],
-    "health": 10
+    "health": 100
   },
   "MONSTER_SQUIRTLE": {
     "image": "images/Squirtle.png",

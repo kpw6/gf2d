@@ -42,7 +42,8 @@ typedef struct Entity_S {
 	void (*update)(struct Entity_S* self); //entity update function
 	void (*onTouch)(struct Entity_S* self, struct Entity_S* other); //entity ontouch function
 
-	Uint32 health; //health of the entity
+	int health; //health of the entity
+	int damage; //amount of damage the entity can enflict
 
 	cropType type; /*type of crop to create*/
 

@@ -58,7 +58,7 @@ Entity* enemy_new() {
 	}
 	enemy->position = vector2d(300, 300);
 	vector2d_add(enemy->min, enemy->position, vector2d(-10, -10));
-	vector2d_add(enemy->max, enemy->position, vector2d(18, 10));
+	vector2d_add(enemy->max, enemy->position, vector2d(10, 10));
 	//enemy->radius = 1;
 	enemy->frame = 0;
 	enemy->think = enemy_think;

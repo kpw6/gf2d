@@ -5,6 +5,7 @@
 
 #include "animations.h"
 #include "physics.h"
+#include "timer.h"
 
 #include "gfc_input.h"
 
@@ -39,6 +40,7 @@ void player_think(Entity* self) {
 void player_update(Entity* self) {
 	if (!self) return;
 	borders_update(self);
+	if (self->health < 0) entity_free(self);
 }
 
 void player_onTouch(Entity* self, Entity* other) {
@@ -58,12 +60,12 @@ Entity* player_new() {
 	}
 	
 	json = sj_load("config/entities.json");
-	if (!json) return;
+	if (!json) return NULL;
 
 	ar = sj_object_get_value(json, "player");
 	if (!ar) {
 		sj_free(json);
-		return;
+		return NULL;
 	}
 
 	sj_get_integer_value(sj_object_get_value(ar, "width"), &width);
@@ -74,7 +76,10 @@ Entity* player_new() {
 	player->sprite = gf2d_sprite_load_all(sj_get_string_value(sj_object_get_value(ar, "image")), width, height, count);
 	if (!player->sprite) {
 		slog("Failed to assign sprite to player");
+		return NULL;
 	}
+
+	sj_get_integer_value(sj_object_get_value(ar, "health"), &player->health);
 
 
 	player->control = 1;

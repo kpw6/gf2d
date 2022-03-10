@@ -1,44 +1,48 @@
 #include "entity.h"
 #include "animations.h"
 #include "borders.h"
+#include "timer.h"
+
+#include "simple_logger.h"
 
 static int lastPress = 0; //This just to remember the place for animation
 
 void simple_movement(Entity* self, float speedx, float speedy) {
-    vector2d_add(self->position, self->position, vector2d(speedx, speedy));
-    self->min.x += speedx;
-    self->max.x += speedx;
-    self->min.y += speedy;
-    self->max.y += speedy;
+    vector2d_add(self->position, self->position, vector2d(speedx * deltaTime, speedy * deltaTime));
+	self->min.x += speedx * deltaTime;
+	self->max.x += speedx * deltaTime;
+	self->min.y += speedy * deltaTime;
+	self->max.y += speedy * deltaTime;
 }
 
 void pushback_entity(Entity* self, Entity* other) {
-	if (other->min.x < self->max.x) {
+	if (other->min.x < self->max.x && lastPress == 0) {
 		simple_movement(other, -other->velocity.x, 0);
 	}
-	if (other->max.x > self->min.x) {
+	if (other->max.x > self->min.x && lastPress == 1) {
 		simple_movement(other, other->velocity.x, 0);
 	}
-	if (other->max.y > self->min.y) {
+	if (other->max.y > self->min.y && lastPress == 3) {
 		simple_movement(other, 0, other->velocity.y);
 	}
-	if (other->min.y < self->max.y) {
+	if (other->min.y < self->max.y && lastPress == 2) {
 		simple_movement(other, 0, -other->velocity.y);
 	}
 }
 
 void pushback_entity_on_border(Entity* self, border* bord) {
-	if (self->min.x < bord->max.x) {
+	if (self->min.x < bord->max.x && lastPress == 0) {
 		simple_movement(self, -self->velocity.x, 0);
 	}
-	if (self->max.x > bord->min.x) {
+	if (self->max.x > bord->min.x && lastPress == 1) {
 		simple_movement(self, self->velocity.x, 0);
 	}
-	if (self->max.y > bord->min.y) {
+	if (self->max.y > bord->min.y && lastPress == 3) {
 		simple_movement(self, 0, self->velocity.y);
 	}
-	if (self->min.y < bord->max.y) {
+	if (self->min.y < bord->max.y && lastPress == 2) {
 		simple_movement(self, 0, -self->velocity.y);
+		slog("Velocity %f", -self->velocity.y);
 	}
 }
 
@@ -121,10 +125,6 @@ Uint8 ent_rect_collision(Entity* self, Entity* other) {
         (self->min.y <= other->max.y && self->max.y >= other->min.y);
 }
 
-Uint8 ent_circ_collision(Entity* self, Entity* other) {
-
-	//return (vector2d_magnitude_squared(vector2d(A.x - B.x, A.y - B.y), vector2d(A.r);
-}
 
 Uint8 ent_border_collision(Entity * self, border *other) {
 	return (self->min.x <= other->max.x && self->max.x >= other->min.x) &&
