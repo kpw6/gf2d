@@ -12,6 +12,8 @@
 #include "player.h"
 #include "monsters.h"
 #include "borders.h"
+#include "menus.h"
+#include "crops.h"
 
 #include "gf2d_sprite.h"
 #include "gfc_audio.h"
@@ -25,7 +27,7 @@ void player_think(Entity* self) {
 	if (!self) return;
 	if (self->control) {
 		player_movement(self);
-		if (gfc_input_command_released("release")) {
+		if (gfc_input_command_pressed("release")) {
 			slog("button pressed");
 			gfc_sound_play(gfc_sound_load("sounds/PokebOpen.mp3", 1, 0), 0, 1, -1, -1);
 			self->control = 0;
@@ -33,10 +35,13 @@ void player_think(Entity* self) {
 			monster = monsters_new("config/entities.json", MONSTER_SQUIRTLE, mPosition);
 			monster->control = 1;
 	}
-
+		if (gfc_input_command_pressed("shop")) {
+		}
+		if (gfc_input_command_pressed("plant")) {
+			crops_new("config/crops.json", CROP_SQUIRTLE, self->position);
+		}
 	}
 }
-
 void player_update(Entity* self) {
 	if (!self) return;
 	borders_update(self);

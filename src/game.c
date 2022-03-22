@@ -10,6 +10,7 @@
 #include "player.h"
 #include "enemy.h"
 #include "crops.h"
+#include "monsters.h"
 
 #include "level.h"
 #include "borders.h"
@@ -57,6 +58,7 @@ int main(int argc, char * argv[])
     other = enemy_new();
     mouse = player_new();
     crop = crops_new("config/crops.json", CROP_SQUIRTLE, vector2d(200, 100));
+    monsters_new("config/entities.json", MONSTER_SQUIRTLE, vector2d(700, 400));
     /*main game loop*/
     while(!done)
     {

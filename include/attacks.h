@@ -10,7 +10,7 @@
 * @param the type of attack to load
 * @param the position of where to spawn the attack,
 */
-Entity* attack_new(char* filename, char* type, Vector2D positon);
+Entity* attack_new(char* filename, char *type, Vector2D positon);
 
 /*
 * @brief think function for the attack
@@ -24,5 +24,10 @@ void attack_think(Entity* self);
 * @param the entity being touched.
 */
 void attack_onTouch(Entity* self, Entity* other);
+
+/*
+* @brief decides what direction to send the attack
+*/
+void attack_direction(Entity* self);
 
 #endif

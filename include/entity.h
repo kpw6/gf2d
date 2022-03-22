@@ -30,6 +30,7 @@ typedef struct Entity_S {
 
 	float frame; //the frame the sprite is on
 	float radius; //radius for circular collision detection
+	float lifeSpan; //used for entities that should only spawn for a certain amount of time.
 
 	Vector2D position; //where the entity currently is in the world
 	Vector2D acceleration; //time it takes for entity to reach max velocity
@@ -44,6 +45,9 @@ typedef struct Entity_S {
 
 	int health; //health of the entity
 	int damage; //amount of damage the entity can enflict
+	int direction; //decides what direction the entity should travel
+
+	char *attackType;
 
 	cropType type; /*type of crop to create*/
 

@@ -4,6 +4,8 @@
 #include "gfc_audio.h"
 #include "gfc_input.h"
 
+
+#include "AI.h"
 #include "monsters.h"
 #include "attacks.h"
 #include "physics.h"
@@ -11,21 +13,26 @@
 
 void monsters_think(Entity* self) {
 	Entity* player;
-	const Uint8* keys;
+	int a = gfc_random() * 100;
 
 	player = entity_isPlayer();
-	keys = SDL_GetKeyboardState(NULL);
 	if (self->control) {
-		monster_movement(self);
-		if (gfc_input_command_released("retrieve")) {
+		monster_movement_playable(self);
+		if (gfc_input_command_released("release")) {
 			gfc_sound_play(gfc_sound_load("sounds/PokebReturn.mp3", 1, 0), 0, 1, -1, -1);
 			player->control = 1;
 			entity_free(self);
 
 		}
 		if (gfc_input_command_pressed("attack")) {
-			attack_new("config/attacks.json", "bubble", vector2d(self->position.x + 40, self->position.y));
+			attack_direction(self);
 		}
+	}
+	else {
+		if (a == 5) {
+			attack_direction(self);
+		}
+		monster_movement_AI(self);
 	}
 }
 
@@ -59,6 +66,8 @@ Entity* monsters_new(char* filename, monsterType type, Vector2D position) {
 	case MONSTER_SQUIRTLE:
 		monster = sj_object_get_value(json, "MONSTER_SQUIRTLE");
 		monsters->sprite = gf2d_sprite_load_all(sj_get_string_value(sj_object_get_value(monster, "image")), 32, 32, 3);
+		monsters->attackType = "bubble";
+		monsters->health = 100;
 		if (!monsters->sprite) return NULL;
 		break;
 	case MONSTER_HOPPIP:

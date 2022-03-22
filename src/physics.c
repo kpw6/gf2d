@@ -1,3 +1,4 @@
+#include "physics.h"
 #include "entity.h"
 #include "animations.h"
 #include "borders.h"
@@ -5,7 +6,7 @@
 
 #include "simple_logger.h"
 
-static int lastPress = 0; //This just to remember the place for animation
+lastPress = 0;
 
 void simple_movement(Entity* self, float speedx, float speedy) {
     vector2d_add(self->position, self->position, vector2d(speedx * deltaTime, speedy * deltaTime));
@@ -83,7 +84,7 @@ void player_movement(Entity* self) {
 	}
 }
 
-void monster_movement(Entity* self) {
+void monster_movement_playable(Entity* self) {
 	const Uint8* keys;
 	keys = SDL_GetKeyboardState(NULL);
 
@@ -117,6 +118,31 @@ void monster_movement(Entity* self) {
 	}
 	else {
 		monster_animation_return_idle(self, lastPress);
+	}
+}
+
+void monster_movement(Entity* self, int c) {
+	switch (c) {
+	case 0:
+		monster_animation_movement(self, c);
+
+		simple_movement(self, self->velocity.x, 0);
+		break;
+	case 1:
+		monster_animation_movement(self, c);
+
+		simple_movement(self, -self->velocity.x, 0);
+		break;
+	case 2:
+		monster_animation_movement(self, c);
+
+		simple_movement(self, 0, self->velocity.y);
+		break;
+	case 3:
+		monster_animation_movement(self, c);
+
+		simple_movement(self, 0, -self->velocity.y);
+		break;
 	}
 }
 

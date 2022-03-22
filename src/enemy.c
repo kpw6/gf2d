@@ -8,8 +8,6 @@
 #include "enemy.h"
 #include "gf2d_sprite.h"
 
-static int lastPress = 0;
-
 void enemy_think(Entity* self) {
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
