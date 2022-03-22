@@ -1,30 +1,28 @@
-# gameframework2d (GF2D)
-a collection of utlitity functions designed to facilitate creating 2D games with SDL2
-This project is specifically intended to function as an educational tool for my students taking 2D Game Programming.
+Starmons
 
-Currently the project is in a WIP state, however it is functional with sample projects showcasing rudimentary scrolling shooters,
-platformers, and adventure games.
+Starmons is a game that is designed to mix Stardew Valley and Pokemon!
 
-The master branch is kept deliberately minimal to allow students to build out systems as they are learning.
-Other branches have more complete system: Collisions, menus, input abstraction.
+Controls:
+	
+	Send out and Recieve: t
+	Collect Crop: e
+	Plant Crop: p
+	Use Attack: f
+	Open Shop: s
+	Movement: Arrow Keys
+	
+Current Functions:
 
-# Build Process
-
-Before you can build the example code we are providing for you, you will need to obtain the libraries required
-by the source code
- - SDL2
- - SDL2_image
- - SDL2_mixer
- - SDL2_ttf
-There are additional sub modules that are needed for this project to work as well, but they can be pulled right from within the project.
-Performable from the following steps from the root of the cloned git repository within a terminal. 
-
-Make sure you fetch submodules: `git submodule update --init --recursive`
-Go into each submodule's src directory and type:
-`make`
-`make static`
-
-Once each submodule has been made you can go into the base project src folder anre simply type:
-`make`
-
-You should now have a `gf2d` binary within the root of your git repository. Executing this will start your game.
+	Combat:
+		Once you send out a monster, you gain control of that monster where you can help collect things or battle another monster with your attacks!
+		
+	Farming:
+		You can plant and collect crops that will help you on your adventure. For example you can grow monsters to help in battle or grow berries to help keep you healthy
+		as you explore.
+		
+	Shop (coming soon):
+		The shop allows you to buy and sell seeds or crops at any point.
+		
+	Wild Area (coming soon):
+		This is an area that is different than your farm. Here you can explore with your monster friends and collect valuable resources you can't normally get on your
+		farm.
