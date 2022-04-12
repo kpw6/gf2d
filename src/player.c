@@ -27,7 +27,7 @@ void player_think(Entity* self) {
 	if (!self) return;
 	if (self->control) {
 		player_movement(self);
-		if (gfc_input_command_pressed("release")) {
+		if (gfc_input_command_released("release")) {
 			slog("button pressed");
 			gfc_sound_play(gfc_sound_load("sounds/PokebOpen.mp3", 1, 0), 0, 1, -1, -1);
 			self->control = 0;
@@ -56,7 +56,7 @@ void player_onTouch(Entity* self, Entity* other) {
 Entity* player_new() {
 	SJson *json, *ar;
 	int width, height, count;
-	float wspeed, rspeed;
+	float wspeed;
 
 	Entity* player = entity_new();
 	if (!player) {

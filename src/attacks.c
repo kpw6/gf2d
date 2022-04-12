@@ -74,7 +74,6 @@ Entity* attack_new(char* filename, char *type, Vector2D position) {
 
 	sj_get_float_value(sj_object_get_value(at, "speed"), &speed);
 	ent->velocity = vector2d(speed, speed);
-	slog("speed: %f", speed);
 
 	ent->sprite = gf2d_sprite_load_all(sj_get_string_value(sj_object_get_value(at, "image")), width, height, frames);
 	if (!ent->sprite) {

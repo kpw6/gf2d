@@ -13,22 +13,30 @@ typedef enum {
 
 typedef struct {
 	
+	Uint8 inuse;
 	Uint8 hovered; 
 
 	Sprite* image; //the image loaded with the button
 	SDL_Rect border; //used for when a button is selected in a menu
 	buttonType type; //the type the button is.
+	
+	char* message; //the message that runs on the button
 
 	Vector2D position;
 	
 }button;
 
-button *button_new(buttonType type, Vector2D position, SDL_Rect rect, Sprite* image);
 
+/*
+* @brief draws the button on the respected position
+* @param the button to be drawn
+*/
 void button_draw(button *but);
 
-void button_action(button* but);
-
+/*
+* @brief frees a button from memory
+* @param the button to be freed
+*/
 void button_free(button* but);
 
 #endif

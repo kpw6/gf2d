@@ -14,7 +14,23 @@
     },
     {
       "command": "attack",
-      "keys": ["f"]
+      "keys": [ "f" ]
+    },
+    {
+      "command": "plant",
+      "keys": [ "p" ]
+    },
+    {
+      "command": "shop",
+      "keys": [ "s" ]
+    },
+    {
+      "command": "navMenuDown",
+      "keys": [ "down" ]
+    },
+    {
+      "command": "navMenuUp",
+      "keys": [ "up" ]
     }
   ]
     

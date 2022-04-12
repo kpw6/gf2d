@@ -15,6 +15,7 @@
 #include "level.h"
 #include "borders.h"
 #include "timer.h"
+#include "menus.h"
 
 int main(int argc, char * argv[])
 {
@@ -29,6 +30,7 @@ int main(int argc, char * argv[])
     Entity* mouse, * other, * crop;
     Vector4D mouseColor = {255,100,255,200};
     Input in;
+    menu *men;
     
     /*program initializtion*/
     init_logger("gf2d.log");
@@ -48,6 +50,7 @@ int main(int argc, char * argv[])
     gf2d_sprite_init(1024);
     entity_system_init(1024);
     borders_init(64);
+    menu_manager_init(32);
     level_manager_init(32);
     SDL_ShowCursor(SDL_DISABLE);
 
@@ -59,6 +62,9 @@ int main(int argc, char * argv[])
     mouse = player_new();
     crop = crops_new("config/crops.json", CROP_SQUIRTLE, vector2d(200, 100));
     monsters_new("config/entities.json", MONSTER_SQUIRTLE, vector2d(700, 400));
+    slog("this would mean the windows fails");
+    men = menu_load("config/menus.json", "shop");
+    slog("we make it here?");
     /*main game loop*/
     while(!done)
     {
@@ -76,6 +82,7 @@ int main(int argc, char * argv[])
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
             level_draw(lev);
+            //menu_draw(men);
             entity_think_all();
             entity_update_all();
             entity_collision_tests();

@@ -115,14 +115,10 @@ void level_load_borders(SJson* json) {
 		}
 		sj_get_float_value(sj_array_get_nth(min, 0), &x);
 		sj_get_float_value(sj_array_get_nth(min, 1), &y);
-		slog("this works %f", y);
-		slog("x = %f", x);
 		bord->min = vector2d(x, y);
 		max = sj_object_get_value(bordert, "max");
 		sj_get_float_value(sj_array_get_nth(max, 0), &x);
 		sj_get_float_value(sj_array_get_nth(max, 1), &y);
-		slog("this works %f", y);
-		slog("x = %f", x);
 		bord->max = vector2d(x, y);
 		sj_get_integer_value(sj_object_get_value(bordert, "type"), &type);
 		bord->type = (borderType)type;

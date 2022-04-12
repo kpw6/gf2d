@@ -1,0 +1,28 @@
+{
+  "shop": {
+
+    "position": [ 100, 100 ],
+    "border": "images/UI/menu.png",
+
+    "buttons": [
+      {
+        "type": 1,
+        "message": "Buy Crop",
+        "position": [ 100, 100 ],
+        "image": "images/UI/button.png"
+      },
+      {
+        "type": 2,
+        "message": "Sell Crop",
+        "position": [ 120, 120 ],
+        "image": "images/UI/button.png"
+      },
+      {
+        "type": 0,
+        "message": "Exit",
+        "position": [ 140, 140 ],
+        "image": "images/UI/button.png"
+      }
+    ]
+  }
+}
