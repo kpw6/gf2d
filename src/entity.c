@@ -48,13 +48,20 @@ Entity* entity_new() {
 		}
 	}
 	slog("no space free for new entity");
-	return;
+	return NULL;
 }
 
 void entity_draw(Entity* self) {
+	SDL_Rect hitbox;
 	if (!self) return;
 	if (!self->sprite) return;
 	gf2d_sprite_draw(self->sprite, self->position, &self->scale, NULL, NULL, NULL, NULL, self->frame);
+	hitbox.x = self->max.x - 10;
+	hitbox.y = self->max.y;
+	hitbox.w = self->max.x - self->min.x;
+	hitbox.h = self->max.y - self->min.y;
+	gf2d_draw_rect(hitbox, vector4d(43, 52, 70, 255));
+	
 }
 
 void entity_draw_all() {
@@ -115,7 +122,6 @@ void entity_collision_tests() {
 			if (entity_manager.entity_list[i].active && entity_manager.entity_list[j].active && j != i) {
 				
 				if (ent_rect_collision(&entity_manager.entity_list[i], &entity_manager.entity_list[j])) {
-					//slog("collision successfull");
 					entity_onTouch(&entity_manager.entity_list[i], &entity_manager.entity_list[j]);
 
 				}
@@ -131,6 +137,8 @@ Entity* entity_isPlayer() {
 			return &entity_manager.entity_list[i];
 		}
 	}
+	slog("Player doesn't exist");
+	return NULL;
 }
 
 void entity_layer_sort() {

@@ -26,6 +26,8 @@ typedef struct Entity_S {
 	Uint8 control; //check if entity is in control.
 	Uint8 isPlayer; //a tag for the player to wear.
 
+	Uint32 lastMovement; //detects the last movement the entity makes for animation 
+
 	Sprite* sprite; //graphic affiliated with entity.
 
 	float frame; //the frame the sprite is on

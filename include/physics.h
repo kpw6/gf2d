@@ -5,8 +5,6 @@
 
 #include "borders.h"
 
-int lastPress; //This just to remember the place for animation
-
 /*
 * @brief a basic movement or bounce effect for an entity
 * @param The entity that you want to move
@@ -35,7 +33,7 @@ void player_movement(Entity* self);
 */
 void monster_movement_playable(Entity* self);
 
-void monster_movement(Entity* self, int c);
+void monster_movement(Entity* self);
 
 /* 
 * @brief simple collision detection between two entities using min and max

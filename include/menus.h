@@ -84,6 +84,11 @@ void menu_think(menu* men);
 */
 void menu_free(menu* men);
 
-
+/*
+* @brief performs the action given to the button
+* @param the button that was clicked
+* @param the menu the button was in.
+*/
+void button_action(button* but, menu* men);
 
 #endif

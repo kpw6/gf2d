@@ -1,5 +1,6 @@
 {
   "map": "images/backgrounds/test_area.png",
+  "music": "sounds/Level1Music.mp3",
   "borders": [
     {
       "min": [ 0, 0 ],

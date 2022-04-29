@@ -9,16 +9,16 @@
 * @param the entity the player is set too animation
 * @param the int that represents what button was last pressed
 */
-void player_animation_movement(Entity* self, int lastKey);
+void player_animation_movement(Entity* self);
 
 /*
 * @brief returns the player animation to idle state.
 * @param the entity the player is set too animation
 * @param the int that represents what button was last pressed
 */
-void player_animation_return_idle(Entity* self, int lastKey);
+void player_animation_return_idle(Entity* self);
 
-void monster_animation_movement(Entity* self, int lastKey);
+void monster_animation_movement(Entity* self);
 
-void monster_animation_return_idle(Entity* self, int lastkey);
+void monster_animation_return_idle(Entity* self);
 #endif

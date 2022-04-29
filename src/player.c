@@ -92,7 +92,6 @@ Entity* player_new() {
 	player->position = vector2d(100, 200);
 	vector2d_add(player->min, player->position, vector2d(-20, -20));
 	vector2d_add(player->max, player->position, vector2d(20, 20));
-	//player->radius = 1;
 	player->frame = 0;
 	player->think = player_think;
 	player->update = player_update;

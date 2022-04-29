@@ -62,8 +62,12 @@ level *level_load(char* filename) {
 	}
 	lev->image = gf2d_sprite_load_image(sj_get_string_value(sj_object_get_value(json, "map")));
 	level_load_borders(json);
-	
 
+	lev->music = gfc_sound_load(sj_get_string_value(sj_object_get_value(json, "music")), 1, 1);
+
+	gfc_sound_play(lev->music, 500, 1, -1, -1);
+
+	lev->inuse = 1;
 
 	free(json);
 	return lev;
@@ -126,6 +130,13 @@ void level_load_borders(SJson* json) {
 	}
 	free(borders);
 	
+}
+
+void level_update(level* lev) {
+	if (!lev) return;
+	entity_think_all();
+	entity_update_all();
+	entity_collision_tests();
 }
 
 

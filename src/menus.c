@@ -35,6 +35,33 @@ void menu_manager_init(Uint32 maxMenus) {
 	slog("Menu system initialzed successfully");
 }
 
+void menu_think(menu* men) {
+	if (!men) return;
+	if (gfc_input_command_pressed("navMenuUp")) {
+		slog("up pressed");
+		if ((men->current_button - 1) >= 0) {
+			men->current_button -= 1;
+			men->button_list[men->current_button + 1].hovered = 0;
+			men->button_list[men->current_button].hovered = 1;
+		}
+	}
+	if (gfc_input_command_pressed("navMenuDown")) {
+		slog("down pressed");
+		if (men->current_button + 1 < men->buttons_count) {
+			slog("crash 1");
+			men->current_button += 1;
+			slog("crash 2");
+			men->button_list[men->current_button - 1].hovered = 0;
+			slog("crash 3");
+			men->button_list[men->current_button].hovered = 1;
+			slog("crash 4");
+		}
+	}
+	if (gfc_input_command_pressed("Enter")) {
+		button_action(&men->button_list[men->current_button], men);
+	}
+}
+
 menu* menu_load(char* filename, char* menuChoice) {
 	menu* men;
 	SJson* json, *menu, *buttons, *position;
@@ -64,14 +91,12 @@ menu* menu_load(char* filename, char* menuChoice) {
 
 	position = sj_object_get_value(menu, "position");
 	sj_get_float_value(sj_array_get_nth(position, 0), &x);
-	slog("border x position: %f", x);
 	sj_get_float_value(sj_array_get_nth(position, 1), &y);
 
 	men->position = vector2d(x, y);
 	
-	sj_get_string_value(sj_object_get_value(menu, "border"), border);
+	border = sj_get_string_value(sj_object_get_value(menu, "border"));
 	men->border = gf2d_sprite_load_all(border, 100, 180, 0);
-	slog("border sprite: %s", men->border);
 	if (!men->border) {
 		slog("menu border cannot be loaded");
 
@@ -123,8 +148,6 @@ void menu_button_load(menu* men, SJson* buttons) {
 
 	men->button_list = (button*)gfc_allocate_array(sizeof(button), men->buttons_count);
 
-	slog("here?");
-
 	for (int i = 0; i < men->buttons_count; i++) {
 		sbutton = sj_array_get_nth(buttons, i);
 		but = menu_button_new(men);
@@ -134,7 +157,10 @@ void menu_button_load(menu* men, SJson* buttons) {
 			slog("failed to give button a type");
 			return NULL;
 		}
-		sj_get_string_value(sj_object_get_value(sbutton, "message"), message);
+		message = sj_get_string_value(sj_object_get_value(sbutton, "message"));
+		if (bimage == "" || bimage == NULL) {
+			slog("message not found for button");
+		}
 		but->message = message;
 		if (!but->message) {
 			slog("failed to give button a message");
@@ -144,7 +170,10 @@ void menu_button_load(menu* men, SJson* buttons) {
 		sj_get_float_value(sj_array_get_nth(position, 0), &x);
 		sj_get_float_value(sj_array_get_nth(position, 1), &y);
 		but->position = vector2d(x, y);
-		sj_get_string_value(sj_object_get_value(sbutton, "image"), bimage);
+		bimage = sj_get_string_value(sj_object_get_value(sbutton, "image"));
+		if (bimage == "" || bimage == NULL) {
+			slog("Image not found for button");
+		}
 		but->image = gf2d_sprite_load_all(bimage, 80, 20, 0);
 		if (!but->image) {
 			slog("failed to give button an image");
@@ -153,20 +182,22 @@ void menu_button_load(menu* men, SJson* buttons) {
 		if (i == 0) {
 			but->hovered = 1;
 		}
+
 		but->border.x = x;
 		but->border.y = y;
 		but->border.h = 40;
 		but->border.w = 100;
+
 	}
 	sj_free(buttons);
 }
 
 void menu_draw(menu* men) {
 	if (!men) return;
+	gf2d_sprite_draw(men->border, men->position, NULL, NULL, NULL, NULL, NULL, 0);
 	for (int i = 0; i < men->buttons_count; i++) {
 		button_draw(&men->button_list[i]);
 	}
-	gf2d_sprite_draw(men->border, men->position, NULL, NULL, NULL, NULL, NULL, 0);
 
 }
 
@@ -180,29 +211,6 @@ void menu_open(menu* men) {
 	men->active = 1;
 }
 
-void menu_think(menu* men) {
-	if (!men) return;
-	if (gfc_input_command_pressed("navMenuUp")) {
-		men->current_button -= 1;
-		if (men->current_button < 0) {
-			men->current_button += 1;
-		}
-		else {
-			men->button_list[men->current_button].hovered = 1;
-			men->button_list[men->current_button - 1].hovered = 0;
-		}
-	}
-	if (gfc_input_command_pressed("navMenuDown")) {
-		men->current_button += 1;
-		if (men->current_button > men->buttons_count) {
-			men->current_button -= 1;
-		}
-		else {
-			men->button_list[men->current_button].hovered = 1;
-			men->button_list[men->current_button + 1].hovered = 0;
-		}
-	}
-}
 
 void menu_free(menu *men) {
 	if (!men) return;
@@ -215,4 +223,14 @@ void menu_free(menu *men) {
 	memset(men, 0, sizeof(men));
 
 
+}
+
+void button_action(button* but, menu *men) {
+	switch (but->type) {
+		case EXIT:
+			men->active = 0;
+			break;
+		case CLOSE:
+			men->active = 0;
+	}
 }

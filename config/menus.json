@@ -14,13 +14,40 @@
       {
         "type": 2,
         "message": "Sell Crop",
-        "position": [ 120, 120 ],
+        "position": [ 100, 140 ],
         "image": "images/UI/button.png"
       },
       {
         "type": 0,
         "message": "Exit",
-        "position": [ 140, 140 ],
+        "position": [ 100, 180 ],
+        "image": "images/UI/button.png"
+      }
+    ]
+  },
+
+  "main": {
+
+    "position": [ 700, 300 ],
+    "border": "images/UI/menu.png",
+
+    "buttons": [
+      {
+        "type": 0,
+        "message": "Start",
+        "position": [ 700, 300 ],
+        "image": "images/UI/button.png"
+      },
+      {
+        "type": 2,
+        "message": "Editor",
+        "position": [ 700, 340 ],
+        "image": "images/UI/button.png"
+      },
+      {
+        "type": 0,
+        "message": "Exit",
+        "position": [ 700, 380 ],
         "image": "images/UI/button.png"
       }
     ]

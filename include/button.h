@@ -7,7 +7,8 @@ typedef enum {
 
 	EXIT,
 	BUY,
-	SELL
+	SELL,
+	CLOSE
 
 }buttonType;
 
@@ -38,5 +39,8 @@ void button_draw(button *but);
 * @param the button to be freed
 */
 void button_free(button* but);
+
+
+
 
 #endif

@@ -99,7 +99,7 @@ Entity* attack_new(char* filename, char *type, Vector2D position) {
 void attack_direction(Entity* self) {
 	Entity* ent;
 	if (!self) return;
-	switch (lastPress) {
+	switch (self->lastMovement) {
 	case 0:
 		ent = attack_new("config/attacks.json", self->attackType, vector2d(self->position.x + 40, self->position.y));
 		ent->direction = 0;

@@ -1,9 +1,9 @@
 #include "animations.h"
 
-void player_animation_movement(Entity* self, int lastKey) {
+void player_animation_movement(Entity* self) {
 	if (!self) return;
 
-	switch (lastKey) {
+	switch (self->lastMovement) {
 	case 0:
 
 		if (self->frame < 9) self->frame = 9;
@@ -35,8 +35,8 @@ void player_animation_movement(Entity* self, int lastKey) {
 
 }
 
-void player_animation_return_idle(Entity* self, int lastKey) {
-	switch (lastKey) {
+void player_animation_return_idle(Entity* self) {
+	switch (self->lastMovement) {
 	case 0:
 		self->frame = 8;
 		break;
@@ -52,10 +52,10 @@ void player_animation_return_idle(Entity* self, int lastKey) {
 	}
 }
 
-void monster_animation_movement(Entity* self, int lastKey) {
+void monster_animation_movement(Entity* self) {
 	if (!self) return;
 
-	switch (lastKey) {
+	switch (self->lastMovement) {
 	case 0:
 
 		if (self->frame < 6) self->frame = 6;
@@ -87,8 +87,8 @@ void monster_animation_movement(Entity* self, int lastKey) {
 
 }
 
-void monster_animation_return_idle(Entity* self, int lastKey) {
-	switch (lastKey) {
+void monster_animation_return_idle(Entity* self) {
+	switch (self->lastMovement) {
 	case 0:
 		self->frame = 6;
 		break;

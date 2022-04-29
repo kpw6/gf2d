@@ -2,6 +2,8 @@
 #define __LEVEL_H__
 #include "simple_json.h"
 
+#include "gfc_audio.h"
+
 #include "entity.h"
 
 typedef struct {
@@ -9,6 +11,8 @@ typedef struct {
 	Uint8 taken; //if the memory is taken in space
 
 	Sprite* image; //the background to load 
+
+	Sound* music; //the music that plays for the world.
 
 	Uint32 totalBorders; //the amount of borders to load in the level
 

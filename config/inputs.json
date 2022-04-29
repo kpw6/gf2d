@@ -26,11 +26,19 @@
     },
     {
       "command": "navMenuDown",
-      "keys": [ "down" ]
+      "keys": [ "o" ]
     },
     {
       "command": "navMenuUp",
-      "keys": [ "up" ]
+      "keys": [ "p" ]
+    },
+    {
+      "command": "Menu",
+      "keys": [ "m" ]
+    }
+    {
+      "command": "Enter",
+      "keys": [ "i" ]
     }
   ]
     
