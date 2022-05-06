@@ -1,0 +1,8 @@
+{
+  "MONSTER_SQUIRTLE": {
+    "image": "images/Squirtle.png",
+    "health": 20,
+    "position": [500, 500],
+    "attack": "bubble"
+  }
+}

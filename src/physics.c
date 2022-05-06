@@ -8,11 +8,19 @@
 
 
 void simple_movement(Entity* self, float speedx, float speedy) {
+	if (!self) return;
     vector2d_add(self->position, self->position, vector2d(speedx * deltaTime, speedy * deltaTime));
 	self->min.x += speedx * deltaTime;
 	self->max.x += speedx * deltaTime;
 	self->min.y += speedy * deltaTime;
 	self->max.y += speedy * deltaTime;
+}
+
+void entity_teleport(Entity* self, Vector2D position) {
+	if (!self) return;
+	self->position = position;
+	self->max = vector2d(position.x + 20, position.y + 20);
+	self->min = vector2d(position.x - 20, position.y - 20);
 }
 
 void pushback_entity(Entity* self, Entity* other) {
@@ -145,9 +153,15 @@ void monster_movement(Entity* self) {
 	}
 }
 
+Uint8 ent_crect_collision(Entity* self, Entity* other) {
+	if (!other->cmax.x) return 0;
+    return (self->min.x <= other->cmax.x && self->max.x >= other->cmin.x) &&
+        (self->min.y <= other->cmax.y && self->max.y >= other->cmin.y);
+}
+
 Uint8 ent_rect_collision(Entity* self, Entity* other) {
-    return (self->min.x <= other->max.x && self->max.x >= other->min.x) &&
-        (self->min.y <= other->max.y && self->max.y >= other->min.y);
+	return (self->min.x <= other->max.x && self->max.x >= other->min.x) &&
+		(self->min.y <= other->max.y && self->max.y >= other->min.y);
 }
 
 

@@ -2,7 +2,9 @@
 #define __SHOP_H__
 
 #include "gf2d_sprite.h"
+#include "menus.h"
 
+int balance;
 
 typedef enum {
 
@@ -18,12 +20,11 @@ typedef struct {
 	shopItem *itemList; /*list of items*/
 	shopItem item; /*the item the player will buy from the store*/
 
+	menu* shopMenu; //the menu connected to the shop
+
 	Uint32 price; /*The price of the shop item*/
 
 	Sprite* image; /*The image that loads the shop gui*/
-
-	Vector2D position; /*The position of the shop menu*/
-	Vector2D scale; /*the size of the menu*/
 
 
 }shop;
@@ -33,7 +34,10 @@ typedef struct {
 */
 void shop_Draw();
 
-
+/*
+* @brief loads shop date from config
+* @param the file that loads the shop
+*/
 shop shop_Create(char* filename);
 
 

@@ -52,7 +52,7 @@ Entity* entity_new() {
 }
 
 void entity_draw(Entity* self) {
-	SDL_Rect hitbox;
+	SDL_Rect hitbox, external;
 	if (!self) return;
 	if (!self->sprite) return;
 	gf2d_sprite_draw(self->sprite, self->position, &self->scale, NULL, NULL, NULL, NULL, self->frame);
@@ -61,6 +61,13 @@ void entity_draw(Entity* self) {
 	hitbox.w = self->max.x - self->min.x;
 	hitbox.h = self->max.y - self->min.y;
 	gf2d_draw_rect(hitbox, vector4d(43, 52, 70, 255));
+	if (self->cmax.x != 0) {
+		external.x = self->cmax.x - 10;
+		external.y = self->cmax.y;
+		external.w = self->cmax.x - self->cmin.x;
+		external.h = self->cmax.y - self->cmin.y;
+		gf2d_draw_rect(external, vector4d(43, 52, 70, 255));
+	}
 	
 }
 
@@ -123,7 +130,10 @@ void entity_collision_tests() {
 				
 				if (ent_rect_collision(&entity_manager.entity_list[i], &entity_manager.entity_list[j])) {
 					entity_onTouch(&entity_manager.entity_list[i], &entity_manager.entity_list[j]);
+				}
+				if (ent_crect_collision(&entity_manager.entity_list[i], &entity_manager.entity_list[j])) {
 
+					entity_menu_open(&entity_manager.entity_list[i], &entity_manager.entity_list[j]);
 				}
 				continue;
 			}
@@ -153,4 +163,29 @@ void entity_layer_sort() {
 			continue;
 		}
 	}
+}
+
+void entity_menu_open(Entity* self, Entity* other) {
+	if (!self) return;
+	if (!other) return;
+	if (self->menuOpen) self->menuOpen(self);
+	if (other->menuOpen) other->menuOpen(other);
+}
+
+void entity_free_all() {
+	for (int i = 0; i < entity_manager.entity_count; i++) {
+		if (entity_manager.entity_list[i].inuse && !entity_manager.entity_list[i].isPlayer) {
+			entity_free(&entity_manager.entity_list[i]);
+		}
+	}
+}
+
+Uint8 entity_check_if_player() {
+	for (int i = 0; i < entity_manager.entity_count; i++) {
+		if (entity_manager.entity_list[i].isPlayer) {
+			return 1;
+		}
+	}
+	slog("Player doesn't exist");
+	return 0;
 }

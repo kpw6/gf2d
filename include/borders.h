@@ -19,8 +19,11 @@ typedef struct {
 
 	Vector2D min;
 	Vector2D max;
+	Vector2D teleposition; //position to teleport the player
 
 	borderType type;
+
+	char* filename; //used for when it changes levels
 
 }border;
 
@@ -39,7 +42,15 @@ void borders_draw_all();
 
 void borders_update(Entity* self);
 
+/*
+* @brief runs what the collisions do.
+*/
 void borders_onCollide(Entity* ent, border *bord);
+
+/*
+* @brief frees all the borders that are inuse
+*/
+void border_free_all();
 
 
 #endif

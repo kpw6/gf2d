@@ -37,14 +37,15 @@ int main_menu(menu* men) {
         gf2d_grahics_next_frame();
 
         if (!men->active && men->current_button == 2) {
-            gfc_sound_free(music);
+            gfc_sound_clear_all();
             return 1;
         }
 
     }
-    gfc_sound_free(music);
+    gfc_sound_clear_all();
     return 0;
 }
+
 
 int main(int argc, char * argv[])
 {
@@ -53,6 +54,12 @@ int main(int argc, char * argv[])
     const Uint8 * keys;
     Sprite *sprite;
     level *lev;
+
+    const int FPS = 60;
+    const int frameDelay = 1000 / FPS;
+    Uint32 frameStart;
+    int frameTime;
+
     
     int mx,my;
     float mf = 0;
@@ -85,21 +92,20 @@ int main(int argc, char * argv[])
     
     /*demo setup*/
     sprite = gf2d_sprite_load_image("images/backgrounds/Test_Area.png");
-    other = enemy_new();
-    mouse = player_new();
-    crop = crops_new("config/crops.json", CROP_SQUIRTLE, vector2d(200, 100));
-    monsters_new("config/entities.json", MONSTER_SQUIRTLE, vector2d(700, 400));
+
     men = menu_load("config/menus.json", "shop");
 
     mainM = menu_load("config/menus.json", "main");
 
     done = main_menu(mainM);
 
-    lev = level_load("levels/testlevel.json");
+    currentLevel = level_load("levels/testlevel.json");
+
 
     /*main game loop*/
     while(!done)
     {
+        frameStart = SDL_GetTicks();
         SDL_PumpEvents();   // update SDL's internal event structures
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         /*update things here*/
@@ -107,25 +113,33 @@ int main(int argc, char * argv[])
 
         timer_update();
 
+
         gfc_input_update();
+
         
         entity_layer_sort();
+
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
-            level_draw(lev);
-            
+            level_draw();
             if (men->active && men != NULL) {
                 menu_think(men);
                 menu_draw(men);
             }
             else {
-                level_update(lev);
+                level_update();
             }
             
 
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
-        
+
+        frameTime = SDL_GetTicks() - frameStart;
+
+        if (frameDelay > frameTime) {
+            SDL_Delay(frameDelay - frameTime);
+        }
+        slog("FPS: %i", frameTime);
         if (gfc_input_command_pressed("Menu")) men->active = 1;
 
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition

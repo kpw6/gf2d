@@ -14,6 +14,7 @@
 #include "borders.h"
 #include "menus.h"
 #include "crops.h"
+#include "level.h"
 
 #include "gf2d_sprite.h"
 #include "gfc_audio.h"
@@ -28,17 +29,12 @@ void player_think(Entity* self) {
 	if (self->control) {
 		player_movement(self);
 		if (gfc_input_command_released("release")) {
-			slog("button pressed");
 			gfc_sound_play(gfc_sound_load("sounds/PokebOpen.mp3", 1, 0), 0, 1, -1, -1);
-			self->control = 0;
-			vector2d_add(mPosition, self->position, vector2d(100, 40));
-			monster = monsters_new("config/entities.json", MONSTER_SQUIRTLE, mPosition);
-			monster->control = 1;
-	}
-		if (gfc_input_command_pressed("shop")) {
 		}
 		if (gfc_input_command_pressed("plant")) {
-			crops_new("config/crops.json", CROP_SQUIRTLE, self->position);
+			if (currentLevel->plantAccess) {
+				crops_new("config/crops.json", CROP_SQUIRTLE, self->position);
+			}
 		}
 	}
 }
@@ -48,10 +44,6 @@ void player_update(Entity* self) {
 	if (self->health < 0) entity_free(self);
 }
 
-void player_onTouch(Entity* self, Entity* other) {
-	//pushback_entity(other, self);
-
-}
 
 Entity* player_new() {
 	SJson *json, *ar;
@@ -61,16 +53,16 @@ Entity* player_new() {
 	Entity* player = entity_new();
 	if (!player) {
 		slog("failed to make new player entity");
-		return NULL;
 	}
 	
-	json = sj_load("config/entities.json");
-	if (!json) return NULL;
+	json = sj_load("config/player.json");
+	if (!json) {
+		slog("player file not found");
+	}
 
 	ar = sj_object_get_value(json, "player");
 	if (!ar) {
-		sj_free(json);
-		return NULL;
+		slog("no player in player file");
 	}
 
 	sj_get_integer_value(sj_object_get_value(ar, "width"), &width);
@@ -79,9 +71,9 @@ Entity* player_new() {
 	sj_get_float_value(sj_object_get_value(ar, "walkspeed"), &wspeed);
 
 	player->sprite = gf2d_sprite_load_all(sj_get_string_value(sj_object_get_value(ar, "image")), width, height, count);
+	slog("image: &s", player->sprite);
 	if (!player->sprite) {
 		slog("Failed to assign sprite to player");
-		return NULL;
 	}
 
 	sj_get_integer_value(sj_object_get_value(ar, "health"), &player->health);
@@ -95,11 +87,8 @@ Entity* player_new() {
 	player->frame = 0;
 	player->think = player_think;
 	player->update = player_update;
-	player->onTouch = player_onTouch;
 
 	player->isPlayer = 1;
-
-	slog("%i walk speed", width);
 
 	sj_free(json);
 

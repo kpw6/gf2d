@@ -1,8 +1,15 @@
 #include "simple_json.h"
 #include "simple_logger.h"
 
+#include "player.h"
+#include "monsters.h"
+#include "enemy.h"
+
+#include "physics.h"
+
 #include "level.h"
 #include "borders.h"
+#include "gfc_audio.h"
 
 typedef struct {
 
@@ -63,13 +70,16 @@ level *level_load(char* filename) {
 	lev->image = gf2d_sprite_load_image(sj_get_string_value(sj_object_get_value(json, "map")));
 	level_load_borders(json);
 
+	level_entity_load(json);
 	lev->music = gfc_sound_load(sj_get_string_value(sj_object_get_value(json, "music")), 1, 1);
-
 	gfc_sound_play(lev->music, 500, 1, -1, -1);
 
+	sj_get_integer_value(sj_object_get_value(json, "plantAccess"), lev->plantAccess);
+	
 	lev->inuse = 1;
-
 	free(json);
+	
+	
 	return lev;
 
 
@@ -87,16 +97,15 @@ level *level_new() {
 
 }
 
-void level_draw(level* lev) {
-	if (!lev) return;
-	gf2d_sprite_draw_image(lev->image, vector2d(0, 0));
+void level_draw() {
+	gf2d_sprite_draw_image(currentLevel->image, vector2d(0, 0));
 	entity_draw_all();
 	borders_draw_all();
 
 }
 
 void level_load_borders(SJson* json) {
-	SJson* borders, *bordert, *min, *max;
+	SJson* borders, *bordert, *min, *max, *position;
 	border *bord;
 	float x, y;
 	int count, type;
@@ -126,17 +135,63 @@ void level_load_borders(SJson* json) {
 		bord->max = vector2d(x, y);
 		sj_get_integer_value(sj_object_get_value(bordert, "type"), &type);
 		bord->type = (borderType)type;
+		if (bord->type == 1){
+			bord->filename = sj_get_string_value(sj_object_get_value(bordert, "level"));
+			sj_get_float_value(sj_object_get_value(bordert, "positionx"), &bord->teleposition.x);
+		}
+		
 
 	}
 	free(borders);
 	
 }
 
-void level_update(level* lev) {
-	if (!lev) return;
+void level_update() {
 	entity_think_all();
 	entity_update_all();
 	entity_collision_tests();
+}
+
+void level_entity_load(SJson* json) {
+	SJson* entities, *jentity;
+	char *entity;
+	char sub[6];
+	int count;
+
+	if (!json) return;
+
+
+	entities = sj_object_get_value(json, "entities");
+	count = sj_array_get_count(entities);
+	for (int i = 0; i < count-1; i++) {
+		entity = sj_get_string_value(sj_array_get_nth(entities, i));
+		if (strcmp(&entity, "player")) {
+			if (!entity_check_if_player()) {
+				player_new();
+			}
+		}
+		strncpy(sub, &entity, 6);
+		if (strcmp(sub, "MONSTER")) {
+			monsters_new(entity);
+		}
+	}
+	slog("end");
+	free(entities);
+
+}
+
+void level_unload() {
+	entity_free_all();
+	border_free_all();
+}
+
+void level_switch(char* filename, border *bord) {
+	Entity* ent = entity_isPlayer();
+	level_unload();
+	gfc_sound_clear_all();
+	level_free(currentLevel);
+	currentLevel = level_load(filename);
+	entity_teleport(ent, vector2d(bord->teleposition.x, ent->position.y));
 }
 
 

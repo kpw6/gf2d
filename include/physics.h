@@ -14,6 +14,13 @@
 void simple_movement(Entity* self, float speedx, float speedy);
 
 /*
+* @brief teleports an entity to a new position
+* @param The entity that will teleport
+* @param position of where to place the entity
+*/
+void entity_teleport(Entity* self, Vector2D position);
+
+/*
 * @brief makes sure entities don't faze through eachother
 */
 void pushback_entity(Entity* self, Entity* other);
@@ -42,6 +49,14 @@ void monster_movement(Entity* self);
 * @return true if collided, false if not
 */
 Uint8 ent_rect_collision(Entity* self, Entity* other);
+
+/*
+* @brief simple collision detection between two entities using min and max
+* @param The entity that inflicted the collision
+* @param the entity that has been collided with
+* @return true if collided, false if not
+*/
+Uint8 ent_crect_collision(Entity* self, Entity* other);
 
 /*
 * @brief simple collision detection between two entities using radius

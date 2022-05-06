@@ -91,4 +91,10 @@ void menu_free(menu* men);
 */
 void button_action(button* but, menu* men);
 
+/*
+* @brief selects the proper menu from the list of menus
+* @param the menu to select
+*/
+menu* menu_select(int menuSelect);
+
 #endif

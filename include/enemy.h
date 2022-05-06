@@ -28,5 +28,7 @@ void enemy_update(Entity* self);
 */
 void enemy_onTouch(Entity* self);
 
+void enemy_openMenu(Entity* self);
+
 
 #endif

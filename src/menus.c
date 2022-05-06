@@ -1,6 +1,7 @@
 #include "menus.h"
 
 #include "gfc_input.h"
+#include "gfc_audio.h"
 
 #include "simple_logger.h"
 #include "simple_json.h"
@@ -38,7 +39,7 @@ void menu_manager_init(Uint32 maxMenus) {
 void menu_think(menu* men) {
 	if (!men) return;
 	if (gfc_input_command_pressed("navMenuUp")) {
-		slog("up pressed");
+		gfc_sound_play(gfc_sound_load("sounds/menuSelect.mp3", 1, 0), 0, 2, -1, -1);
 		if ((men->current_button - 1) >= 0) {
 			men->current_button -= 1;
 			men->button_list[men->current_button + 1].hovered = 0;
@@ -46,18 +47,15 @@ void menu_think(menu* men) {
 		}
 	}
 	if (gfc_input_command_pressed("navMenuDown")) {
-		slog("down pressed");
+		gfc_sound_play(gfc_sound_load("sounds/menuSelect.mp3", 1, 0), 0, 2, -1, -1);
 		if (men->current_button + 1 < men->buttons_count) {
-			slog("crash 1");
 			men->current_button += 1;
-			slog("crash 2");
 			men->button_list[men->current_button - 1].hovered = 0;
-			slog("crash 3");
 			men->button_list[men->current_button].hovered = 1;
-			slog("crash 4");
 		}
 	}
 	if (gfc_input_command_pressed("Enter")) {
+		gfc_sound_play(gfc_sound_load("sounds/menuSelect.mp3", 1, 0), 0, 2, -1, -1);
 		button_action(&men->button_list[men->current_button], men);
 	}
 }
@@ -233,4 +231,9 @@ void button_action(button* but, menu *men) {
 		case CLOSE:
 			men->active = 0;
 	}
+}
+
+menu* menu_select(int menuSelect) {
+	if (menuSelect <= 0 || menuSelect > menu_manager.menu_count) return NULL;
+	return &menu_manager.menu_list[menuSelect];
 }

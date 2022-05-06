@@ -2,6 +2,7 @@
 #define __ENTITY_H__
 
 #include "gf2d_sprite.h"
+#include "menus.h"
 
 typedef enum {
 
@@ -39,11 +40,13 @@ typedef struct Entity_S {
 	Vector2D velocity; //how fast the entity can move
 	Vector2D scale; //how big the entity will be
 	Vector2D min, max; //min and max are used for rectangular collision detection
+	Vector2D cmin, cmax; //the min and max used for talking npcs.
 
 
 	void (*think)(struct Entity_S* self); //entity think function
 	void (*update)(struct Entity_S* self); //entity update function
 	void (*onTouch)(struct Entity_S* self, struct Entity_S* other); //entity ontouch function
+	void (*menuOpen)(struct Entity_S* self); //entity menu function
 
 	int health; //health of the entity
 	int damage; //amount of damage the entity can enflict
@@ -51,7 +54,8 @@ typedef struct Entity_S {
 
 	char *attackType;
 
-	cropType type; /*type of crop to create*/
+	monsterType mtype;
+	cropType ctype; /*type of crop to create*/
 
 
 }Entity;
@@ -128,5 +132,17 @@ Entity *entity_isPlayer();
 * 
 */
 void entity_layer_sort();
+
+void entity_menu_open(Entity* self, Entity* other);
+
+/*
+* @brief frees all the entities that isn't the player
+*/
+void entity_free_all();
+
+/*
+* checks if the player already exist
+*/
+Uint8 entity_check_if_player();
 
 #endif

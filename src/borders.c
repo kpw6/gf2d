@@ -6,6 +6,8 @@
 
 #include "physics.h"
 
+#include "level.h"
+
 typedef struct {
 
 	border* border_list;
@@ -53,6 +55,7 @@ border *border_new() {
 }
 
 void borders_draw(border* bord) {
+	SDL_Rect hitbox;
 	gf2d_draw_line(bord->max, bord->min, vector4d(20, 50, 100, 10));
 }
 
@@ -83,8 +86,20 @@ void borders_onCollide(Entity* ent, border* bord) {
 	if (!bord)return;
 	switch (bord->type) {
 		case BORDER_WALL:
-			slog("pushback");
 			pushback_entity_on_border(ent, bord);
+			break;
+		case BORDER_TELEPORT:
+			if(ent->isPlayer) {
+				level_switch(bord->filename, bord);
+			}
+			break;
 	}
 }
 
+void border_free_all() {
+	for (int i = 0; i < BM.border_count; i++) {
+		if (BM.border_list[i].inuse) {
+			borders_free(&BM.border_list[i]);
+		}
+	}
+}

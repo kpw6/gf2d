@@ -7,6 +7,6 @@ void monsters_think(Entity* self);
 
 void monsters_ontouch(Entity* self);
 
-Entity* monsters_new(char* filename, monsterType type, Vector2D position);
+Entity* monsters_new(char* type);
 
 #endif

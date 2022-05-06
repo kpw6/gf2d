@@ -1,0 +1,30 @@
+{
+  "map": "images/backgrounds/Town.png",
+  "music": "sounds/Level1Music.mp3",
+  "plantAccess": 0,
+  "borders": [
+    {
+      "min": [ 0, 0 ],
+      "max": [ 1280, 90 ],
+      "type": 0
+    },
+    {
+      "min": [ 0, 630 ],
+      "max": [ 1280, 1280 ],
+      "type": 0
+    },
+    {
+      "min": [ 1100, 100 ],
+      "max": [ 1100, 600 ],
+      "type": 1,
+      "level": "levels/testlevel.json",
+      "positionx": 100
+    }
+
+
+  ],
+  "entities": [
+    "player",
+    "MONSTER_SQUIRTLE"
+  ]
+}

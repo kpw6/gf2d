@@ -44,7 +44,7 @@ Entity* crops_new(char* filename, cropType type, Vector2D position) {
 		slog("unknown filename for crop");
 		return NULL;
 	}
-	crop->type = type;
+	crop->ctype = type;
 	crop->think = crops_think;
 	crop->onTouch = crops_ontouch;
 
