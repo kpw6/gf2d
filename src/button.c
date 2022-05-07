@@ -3,6 +3,8 @@
 #include "gfc_text.h"
 #include "gfc_input.h"
 
+#include "fonts.h"
+
 #include "simple_logger.h"
 
 
@@ -11,6 +13,7 @@ void button_draw(button* but) {
 	if (but->hovered) {
 		gf2d_draw_rect(but->border, vector4d(132, 20, 232, 255));
 	}
+	fonts_draw(but->message, but->border, but->texture);
 }
 
 
@@ -22,5 +25,6 @@ void button_free(button* but) {
 	if (but->image) {
 		gf2d_sprite_free(but->image);
 	}
+	TTF_CloseFont(but->font);
 	memset(but, 0, sizeof(but));
 }

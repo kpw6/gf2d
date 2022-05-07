@@ -22,6 +22,8 @@ typedef struct {
 
 }menu;
 
+
+
 /*
 * @brief closes the menu manager
 */

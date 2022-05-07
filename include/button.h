@@ -2,6 +2,7 @@
 #define __BUTTON_H__
 
 #include "gf2d_sprite.h"
+#include "SDL_ttf.h"
 
 typedef enum {
 
@@ -20,6 +21,10 @@ typedef struct {
 	Sprite* image; //the image loaded with the button
 	SDL_Rect border; //used for when a button is selected in a menu
 	buttonType type; //the type the button is.
+
+	TTF_Font* font; //the font that is used for the border
+	SDL_Surface* surface;
+	SDL_Texture* texture;
 	
 	char* message; //the message that runs on the button
 

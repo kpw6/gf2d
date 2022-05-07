@@ -1,7 +1,13 @@
 #include "menus.h"
 
+#include <SDL.h>
+#include "SDL_ttf.h"
+
 #include "gfc_input.h"
 #include "gfc_audio.h"
+
+#include "gf2d_graphics.h"
+
 
 #include "simple_logger.h"
 #include "simple_json.h"
@@ -15,6 +21,7 @@ typedef struct {
 }menuManager;
 
 static menuManager menu_manager = { 0 };
+
 
 void menu_manager_close() {
 	int i;
@@ -99,7 +106,6 @@ menu* menu_load(char* filename, char* menuChoice) {
 		slog("menu border cannot be loaded");
 
 	}
-
 	men->current_button = 0;
 	free(json);
 	return men;
@@ -138,7 +144,7 @@ button* menu_button_new(menu* men) {
 
 void menu_button_load(menu* men, SJson* buttons) {
 	SJson* sbutton, * position;
-	char* bimage = "", message = "";
+	char* bimage = "", *message = "";
 	button* but;
 	float x, y;
 
@@ -156,14 +162,12 @@ void menu_button_load(menu* men, SJson* buttons) {
 			return NULL;
 		}
 		message = sj_get_string_value(sj_object_get_value(sbutton, "message"));
-		if (bimage == "" || bimage == NULL) {
-			slog("message not found for button");
-		}
 		but->message = message;
 		if (!but->message) {
 			slog("failed to give button a message");
 			continue;
 		}
+		slog("%s", but->message);
 		position = sj_object_get_value(sbutton, "position");
 		sj_get_float_value(sj_array_get_nth(position, 0), &x);
 		sj_get_float_value(sj_array_get_nth(position, 1), &y);
@@ -185,6 +189,12 @@ void menu_button_load(menu* men, SJson* buttons) {
 		but->border.y = y;
 		but->border.h = 40;
 		but->border.w = 100;
+
+		but->font = TTF_OpenFont("PKMN.ttf", 20);
+
+		SDL_Color color = { 0, 0, 0 };
+		but->surface = TTF_RenderText_Solid(but->font, but->message, color);
+		but->texture = SDL_CreateTextureFromSurface(gf2d_graphics_get_renderer(), but->surface);
 
 	}
 	sj_free(buttons);
