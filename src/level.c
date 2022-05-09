@@ -4,6 +4,8 @@
 #include "player.h"
 #include "monsters.h"
 #include "enemy.h"
+#include "NPC.h"
+#include "Shopkeeper.h"
 
 #include "physics.h"
 
@@ -74,7 +76,7 @@ level *level_load(char* filename) {
 	lev->music = gfc_sound_load(sj_get_string_value(sj_object_get_value(json, "music")), 1, 1);
 	gfc_sound_play(lev->music, 500, 1, -1, -1);
 
-	sj_get_integer_value(sj_object_get_value(json, "plantAccess"), lev->plantAccess);
+	sj_get_integer_value(sj_object_get_value(json, "plantAccess"), &lev->plantAccess);
 	
 	lev->inuse = 1;
 	free(json);
@@ -105,7 +107,7 @@ void level_draw() {
 }
 
 void level_load_borders(SJson* json) {
-	SJson* borders, *bordert, *min, *max, *position;
+	SJson* borders, * bordert, * min, * max;
 	border *bord;
 	float x, y;
 	int count, type;
@@ -116,7 +118,9 @@ void level_load_borders(SJson* json) {
 	count = sj_array_get_count(borders);
 	for (int i = 0; i < count; i++) {
 		bordert = sj_array_get_nth(borders, i);
-		if (!bordert) continue;
+		if (!bordert) {
+			slog("error with borders");
+		}
 		bord = border_new();
 		if (!bord) {
 			slog("couldn't create border");
@@ -135,14 +139,11 @@ void level_load_borders(SJson* json) {
 		bord->max = vector2d(x, y);
 		sj_get_integer_value(sj_object_get_value(bordert, "type"), &type);
 		bord->type = (borderType)type;
-		if (bord->type == 1){
-			bord->filename = sj_get_string_value(sj_object_get_value(bordert, "level"));
-			sj_get_float_value(sj_object_get_value(bordert, "positionx"), &bord->teleposition.x);
-		}
-		
-
+		bord->filename = sj_get_string_value(sj_object_get_value(bordert, "level"));
+		slog("%s", bord->filename);
+		sj_get_float_value(sj_object_get_value(bordert, "positionx"), &bord->teleposition.x);
+		slog("%f", bord->teleposition.x);
 	}
-	free(borders);
 	
 }
 
@@ -153,45 +154,59 @@ void level_update() {
 }
 
 void level_entity_load(SJson* json) {
-	SJson* entities, *jentity;
+	SJson* entities;
 	char *entity;
-	char sub[6];
-	int count;
+	int count, i;
 
 	if (!json) return;
 
-
 	entities = sj_object_get_value(json, "entities");
 	count = sj_array_get_count(entities);
-	for (int i = 0; i < count-1; i++) {
+	slog("%i", count);
+
+	for (i = 0; i < count; i++) {
 		entity = sj_get_string_value(sj_array_get_nth(entities, i));
-		if (strcmp(&entity, "player")) {
+		if (strcmp(entity, "player") == 0) {
 			if (!entity_check_if_player()) {
 				player_new();
 			}
+			continue;
 		}
-		strncpy(sub, &entity, 6);
-		if (strcmp(sub, "MONSTER")) {
-			monsters_new(entity);
+		if (strcmp(entity, "NPC") == 0) {
+			slog("%s", entity);
+			NPC_new();
+			continue;
 		}
-	}
-	slog("end");
-	free(entities);
+		if (strcmp(entity, "shopkeeper") == 0) {
+			slog("%s", entity);
+			Shopkeeper_new();
+			continue;
+		}
 
+		if (strncmp(entity, "MONSTER", 7) == 0) {
+			slog("%s", entity);
+			monsters_new(entity);
+			continue;
+		}
+
+	}
+	sj_free(entities);
 }
 
-void level_unload() {
+void level_unload(border* bord) {
 	entity_free_all();
-	border_free_all();
+	border_free_all(bord);
 }
 
 void level_switch(char* filename, border *bord) {
 	Entity* ent = entity_isPlayer();
-	level_unload();
+	slog("WHAT: %s", filename);
 	gfc_sound_clear_all();
-	level_free(currentLevel);
+	level_unload(bord);
 	currentLevel = level_load(filename);
+	slog("border: %f", bord->teleposition.x);
 	entity_teleport(ent, vector2d(bord->teleposition.x, ent->position.y));
+	borders_free(bord);
 }
 
 

@@ -30,9 +30,13 @@ void player_think(Entity* self) {
 		player_movement(self);
 		if (gfc_input_command_released("release")) {
 			gfc_sound_play(gfc_sound_load("sounds/PokebOpen.mp3", 1, 0), 0, 1, -1, -1);
+			monster = monsters_new("MONSTER_SQUIRTLE");
+			monster->position = vector2d(self->position.x + 50, self->position.y);
+			monster->control = 1;
+			self->control = 0;
 		}
-		if (gfc_input_command_pressed("plant")) {
-			if (currentLevel->plantAccess) {
+		if (currentLevel->plantAccess == 1) {
+			if (gfc_input_command_pressed("plant")) {
 				crops_new("config/crops.json", CROP_SQUIRTLE, self->position);
 			}
 		}
@@ -71,11 +75,10 @@ Entity* player_new() {
 	sj_get_float_value(sj_object_get_value(ar, "walkspeed"), &wspeed);
 
 	player->sprite = gf2d_sprite_load_all(sj_get_string_value(sj_object_get_value(ar, "image")), width, height, count);
-	slog("image: &s", player->sprite);
 	if (!player->sprite) {
 		slog("Failed to assign sprite to player");
 	}
-
+	slog("%s", player->sprite->filepath);
 	sj_get_integer_value(sj_object_get_value(ar, "health"), &player->health);
 
 
@@ -89,8 +92,6 @@ Entity* player_new() {
 	player->update = player_update;
 
 	player->isPlayer = 1;
-
-	sj_free(json);
 
 	return player;
 }

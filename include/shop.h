@@ -29,6 +29,8 @@ typedef struct {
 
 }shop;
 
+int balance;
+
 /*
 * @brief draws the shop menu 
 */

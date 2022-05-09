@@ -39,8 +39,6 @@ Entity* entity_new() {
 	for (i = 0; i < entity_manager.entity_count; i++) {
 		if (!entity_manager.entity_list[i].inuse) {
 			entity_manager.entity_list[i].inuse = 1;
-			entity_manager.entity_list[i].scale.x = 1;
-			entity_manager.entity_list[i].scale.y = 1;
 			entity_manager.entity_list[i].min = vector2d(0,0);
 			entity_manager.entity_list[i].max = vector2d(0,0);
 			entity_manager.entity_list[i].active = 1;
@@ -55,14 +53,14 @@ void entity_draw(Entity* self) {
 	SDL_Rect hitbox, external;
 	if (!self) return;
 	if (!self->sprite) return;
-	gf2d_sprite_draw(self->sprite, self->position, &self->scale, NULL, NULL, NULL, NULL, self->frame);
+	gf2d_sprite_draw(self->sprite, self->position, NULL, NULL, NULL, NULL, NULL, self->frame);
 	hitbox.x = self->max.x - 10;
 	hitbox.y = self->max.y;
 	hitbox.w = self->max.x - self->min.x;
 	hitbox.h = self->max.y - self->min.y;
 	gf2d_draw_rect(hitbox, vector4d(43, 52, 70, 255));
 	if (self->cmax.x != 0) {
-		external.x = self->cmax.x - 10;
+		external.x = self->cmax.x;
 		external.y = self->cmax.y;
 		external.w = self->cmax.x - self->cmin.x;
 		external.h = self->cmax.y - self->cmin.y;

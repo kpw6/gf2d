@@ -14,6 +14,7 @@
 #include "enemy.h"
 #include "crops.h"
 #include "monsters.h"
+#include "shop.h"
 
 #include "level.h"
 #include "borders.h"
@@ -57,6 +58,7 @@ int main(int argc, char * argv[])
     const Uint8 * keys;
     Sprite *sprite;
     level *lev;
+    float day = 0;
 
     const int FPS = 60;
     const int frameDelay = 1000 / FPS;
@@ -69,7 +71,7 @@ int main(int argc, char * argv[])
     Entity* mouse, * other, * crop;
     Vector4D mouseColor = {255,100,255,200};
     Input in;
-    menu *men, *mainM;
+    menu *men, *men1, *mainM, *menu2;
     TTF_Font* font;
     
     /*program initializtion*/
@@ -85,36 +87,30 @@ int main(int argc, char * argv[])
         vector4d(0,0,0,255),
         0);
     fonts_init();
-    font = TTF_OpenFont("PKMN.ttf", 25);
-    SDL_Color color = { 255, 255, 0 };
-    SDL_Surface* surface = TTF_RenderText_Solid(font, "Why won't you show up", color);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(gf2d_graphics_get_renderer(), surface);
     gf2d_graphics_set_frame_delay(16);
     gfc_input_init("config/inputs.json");
-    gfc_audio_init(128, 2, 2, 2, 1, 1);
+    gfc_audio_init(128, 2, 2, 5, 1, 1);
     gf2d_sprite_init(1024);
     entity_system_init(1024);
+    chatbox_init(1028);
     borders_init(64);
-    menu_manager_init(32);
+    menu_manager_init(32); 
     level_manager_init(32);
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
-    sprite = gf2d_sprite_load_image("images/backgrounds/Test_Area.png");
-
-    men = menu_load("config/menus.json", "shop");
 
     mainM = menu_load("config/menus.json", "main");
 
+    men1 = menu_load("config/menus.json", "shop");
+
+    men = menu_load("config/menus.json", "chat1");
+
+    menu2 = menu_load("config/menus.json", "chat2");
+
     done = main_menu(mainM);
 
-    rect.x = 100;
-    rect.y = 100;
-    rect.h = 100;
-    rect.w = 100;
-
     currentLevel = level_load("levels/testlevel.json");
-
 
     /*main game loop*/
     while(!done)
@@ -127,38 +123,40 @@ int main(int argc, char * argv[])
 
         timer_update();
 
-
         gfc_input_update();
 
-        
         entity_layer_sort();
 
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
             level_draw();
-            SDL_RenderCopy(gf2d_graphics_get_renderer(), texture, NULL, &rect);
-            if (men->active && men != NULL) {
-                menu_think(men);
-                menu_draw(men);
-            }
-            else {
-                level_update();
-            }            
+            level_update();       
 
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 
         frameTime = SDL_GetTicks() - frameStart;
-
+        day += 1 * deltaTime;
         if (frameDelay > frameTime) {
             SDL_Delay(frameDelay - frameTime);
         }
-        slog("FPS: %i", frameTime);
+        //slog("FPS: %i", frameTime);
+
+        if (day > 1000) {
+            //slog("day over");
+            menu_draw(menu2);
+        }
+        if (day > 1200) {
+            day = 0;
+            balance += 500;
+            slog("500 added to balance");
+            slog("current balance: %i", balance);
+        }
+
         if (gfc_input_command_pressed("Menu")) men->active = 1;
 
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
     }
-    TTF_Quit;
     slog("---==== END ====---");
     return 0;
 }

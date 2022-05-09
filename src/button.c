@@ -13,7 +13,7 @@ void button_draw(button* but) {
 	if (but->hovered) {
 		gf2d_draw_rect(but->border, vector4d(132, 20, 232, 255));
 	}
-	fonts_draw(but->message, but->border, but->texture);
+	fonts_draw(but->border, but->texture);
 }
 
 

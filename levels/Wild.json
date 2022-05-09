@@ -19,17 +19,23 @@
       "type": 0
     },
     {
+      "min": [ 586, 648 ],
+      "max": [ 424, 443 ],
+      "type": 0
+    },
+    {
       "min": [ 0, 100 ],
       "max": [ 0, 600 ],
       "type": 1,
       "level": "levels/testlevel.json",
-      "positionx": 100
+      "positionx": 1000
     }
 
 
   ],
   "entities": [
     "player",
-    "MONSTER_SQUIRTLE"
+    "MONSTER_SQUIRTLE",
+    "MONSTER_HOPPIP"
   ]
 }

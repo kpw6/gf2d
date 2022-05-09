@@ -14,7 +14,6 @@
 void monsters_think(Entity* self) {
 	Entity* player;
 	int a = gfc_random() * 100;
-
 	player = entity_isPlayer();
 	if (self->control) {
 		monster_movement_playable(self);
@@ -59,10 +58,10 @@ Entity* monsters_new(char* type) {
 	monsters->think = monsters_think;
 	monsters->onTouch = monsters_ontouch;
 
-	if (strcmp(type, "MONSTER_SQUIRTLE")) {
+	if (strcmp(type, "MONSTER_SQUIRTLE") == 0) {
 		monsters->mtype = MONSTER_SQUIRTLE;
 		monster = sj_object_get_value(json, "MONSTER_SQUIRTLE");
-		monsters->sprite = gf2d_sprite_load_all(sj_get_string_value(sj_object_get_value(monster, "image")), 32, 32, 3);
+		monsters->sprite = gf2d_sprite_load_all(sj_get_string_value(sj_object_get_value(monster, "image")), 32, 32, 4);
 		monsters->attackType = sj_get_string_value(sj_object_get_value(monster, "attack"));
 		sj_get_integer_value(sj_object_get_value(monster, "health"), monsters->health);
 
@@ -80,14 +79,19 @@ Entity* monsters_new(char* type) {
 		if (!monsters->sprite) return NULL;
 	}
 
-	else if (strcmp(type, "MONSTER_HOPPIP")) {
+	if (strcmp(type, "MONSTER_HOPPIP") == 0) {
+		slog("cap");
 		monsters->mtype = MONSTER_HOPPIP;
 		monster = sj_object_get_value(json, "MONSTER_HOPPIP");
-		monsters->sprite = gf2d_sprite_load_all(sj_get_string_value(sj_object_get_value(monster, "image")), 64, 64, 3);
+		monsters->sprite = gf2d_sprite_load_all(sj_get_string_value(sj_object_get_value(monster, "image")), 32, 32, 4);
 		monsters->attackType = sj_get_string_value(sj_object_get_value(monster, "attack"));
+		slog("%s", sj_get_string_value(sj_object_get_value(monster, "attack")));
 		sj_get_integer_value(sj_object_get_value(monster, "health"), monsters->health);
 
-		arr = sj_object_get_value(monster, "posititon");
+		arr = sj_object_get_value(monster, "position");
+		if (!arr) {
+			slog("error getting monster position");
+		}
 		sj_get_float_value(sj_array_get_nth(arr, 0), &x);
 		sj_get_float_value(sj_array_get_nth(arr, 1), &y);
 		monsters->position.x = x;
@@ -95,12 +99,13 @@ Entity* monsters_new(char* type) {
 		vector2d_add(monsters->min, monsters->position, vector2d(-10, -10));
 		vector2d_add(monsters->max, monsters->position, vector2d(10, 10));
 
+		slog("%s", monsters->sprite->filepath);
+
 		if (!monsters->sprite) return NULL;
 	}
 
 	monsters->frame = 0;
 	monsters->velocity = vector2d(1, 1);
 
-	free(json);
 	return monsters;
 }

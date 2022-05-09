@@ -6,6 +6,9 @@
 #include "gfc_input.h"
 #include "gfc_audio.h"
 
+#include "chatbox.h"
+#include "shop.h"
+
 #include "gf2d_graphics.h"
 
 
@@ -45,55 +48,84 @@ void menu_manager_init(Uint32 maxMenus) {
 
 void menu_think(menu* men) {
 	if (!men) return;
-	if (gfc_input_command_pressed("navMenuUp")) {
-		gfc_sound_play(gfc_sound_load("sounds/menuSelect.mp3", 1, 0), 0, 2, -1, -1);
-		if ((men->current_button - 1) >= 0) {
-			men->current_button -= 1;
-			men->button_list[men->current_button + 1].hovered = 0;
-			men->button_list[men->current_button].hovered = 1;
+	if (men->menutype == MENU_OPTIONS) {
+		if (gfc_input_command_pressed("navMenuUp")) {
+			gfc_sound_play(gfc_sound_load("sounds/menuSelect.mp3", 1, 0), 0, 2, -1, -1);
+			if ((men->current_button - 1) >= 0) {
+				men->current_button -= 1;
+				men->button_list[men->current_button + 1].hovered = 0;
+				men->button_list[men->current_button].hovered = 1;
+			}
+		}
+		if (gfc_input_command_pressed("navMenuDown")) {
+			gfc_sound_play(gfc_sound_load("sounds/menuSelect.mp3", 1, 0), 0, 2, -1, -1);
+			if (men->current_button + 1 < men->buttons_count) {
+				men->current_button += 1;
+				men->button_list[men->current_button - 1].hovered = 0;
+				men->button_list[men->current_button].hovered = 1;
+			}
+		}
+		if (gfc_input_command_pressed("Enter")) {
+			gfc_sound_play(gfc_sound_load("sounds/menuSelect.mp3", 1, 0), 0, 2, -1, -1);
+			button_action(&men->button_list[men->current_button], men);
 		}
 	}
-	if (gfc_input_command_pressed("navMenuDown")) {
-		gfc_sound_play(gfc_sound_load("sounds/menuSelect.mp3", 1, 0), 0, 2, -1, -1);
-		if (men->current_button + 1 < men->buttons_count) {
-			men->current_button += 1;
-			men->button_list[men->current_button - 1].hovered = 0;
-			men->button_list[men->current_button].hovered = 1;
+	if (men->menutype == MENU_CHAT) {
+		if (gfc_input_command_pressed("Enter")) {
+			if (men->chat->currentText < men->chat->maxText) {
+				men->chat->currentText += 1;
+				SDL_Color color = { 0, 0, 0 };
+				men->chat->surface = TTF_RenderText_Solid(men->chat->font, men->chat->text[men->chat->currentText], color);
+				men->chat->texture = SDL_CreateTextureFromSurface(gf2d_graphics_get_renderer(), men->chat->surface);
+			}
+			else {
+				men->active = 0;
+			}
 		}
-	}
-	if (gfc_input_command_pressed("Enter")) {
-		gfc_sound_play(gfc_sound_load("sounds/menuSelect.mp3", 1, 0), 0, 2, -1, -1);
-		button_action(&men->button_list[men->current_button], men);
 	}
 }
 
 menu* menu_load(char* filename, char* menuChoice) {
 	menu* men;
-	SJson* json, *menu, *buttons, *position;
+	SJson* json, * menu, * buttons, * position;
 	float x, y;
+	int type;
+	Uint32 count;
 	char* border = "", * message = "";
 
 
-	men	= menu_new();
+		men = menu_new();
 	if (!men) return NULL;
 
 	json = sj_load(filename);
 	if (!json) return NULL;
-	
+
 	menu = sj_object_get_value(json, menuChoice);
 	if (!men) {
 		slog("menu choice is not an option");
 		return NULL;
 	}
 
-	buttons = sj_object_get_value(menu, "buttons");
-	if (!buttons) {
-		slog("buttons don't exist");
-		return NULL;
-	}
-	
-	menu_button_load(men, buttons);
+	sj_get_integer_value(sj_object_get_value(menu, "menuType"), &type);
+	men->menutype = type;
+	slog("%i", men->menutype);
 
+	if (men->menutype == MENU_OPTIONS) {
+		buttons = sj_object_get_value(menu, "buttons");
+		if (!buttons) {
+			slog("buttons don't exist");
+			return NULL;
+		}
+
+		menu_button_load(men, buttons);
+		men->current_button = 0;
+	}
+
+	if (men->menutype == MENU_CHAT) {
+		buttons = sj_object_get_value(menu, "text");
+		count = sj_array_get_count(buttons);
+		men->chat = chatbox_load(count, buttons);
+	}
 	position = sj_object_get_value(menu, "position");
 	sj_get_float_value(sj_array_get_nth(position, 0), &x);
 	sj_get_float_value(sj_array_get_nth(position, 1), &y);
@@ -106,7 +138,6 @@ menu* menu_load(char* filename, char* menuChoice) {
 		slog("menu border cannot be loaded");
 
 	}
-	men->current_button = 0;
 	free(json);
 	return men;
 }
@@ -203,8 +234,13 @@ void menu_button_load(menu* men, SJson* buttons) {
 void menu_draw(menu* men) {
 	if (!men) return;
 	gf2d_sprite_draw(men->border, men->position, NULL, NULL, NULL, NULL, NULL, 0);
-	for (int i = 0; i < men->buttons_count; i++) {
-		button_draw(&men->button_list[i]);
+	if (men->menutype == MENU_OPTIONS) {
+		for (int i = 0; i < men->buttons_count; i++) {
+			button_draw(&men->button_list[i]);
+		}
+	}
+	if (men->menutype == MENU_CHAT) {
+		chatbox_draw(men->chat);
 	}
 
 }
@@ -220,13 +256,15 @@ void menu_open(menu* men) {
 }
 
 
-void menu_free(menu *men) {
+void menu_free(menu* men) {
 	if (!men) return;
 	if (men->border) {
 		gf2d_sprite_free(men->border);
 	}
-	for (int f = 0; f < men->buttons_count; f++) {
-		button_free(&men->button_list[f]);
+	if(men->menutype == MENU_OPTIONS) {
+		for (int f = 0; f < men->buttons_count; f++) {
+			button_free(&men->button_list[f]);
+		}
 	}
 	memset(men, 0, sizeof(men));
 
@@ -240,10 +278,19 @@ void button_action(button* but, menu *men) {
 			break;
 		case CLOSE:
 			men->active = 0;
+			break;
+		case BUY:
+			balance -= 50;
+			slog("%i", balance);
+			break;
+		case SELL:
+			balance += 50;
+			slog("%i", balance);
+			break;
 	}
 }
 
 menu* menu_select(int menuSelect) {
-	if (menuSelect <= 0 || menuSelect > menu_manager.menu_count) return NULL;
+	if (menuSelect < 0 || menuSelect > menu_manager.menu_count) return NULL;
 	return &menu_manager.menu_list[menuSelect];
 }

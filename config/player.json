@@ -1,6 +1,6 @@
 {
   "player": {
-    "image": "images/player.png",
+    "image": "images/space_bug.png",
     "walkspeed": 1,
     "runspeed": 3,
     "width": 64,

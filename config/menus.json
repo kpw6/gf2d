@@ -3,6 +3,7 @@
 
     "position": [ 100, 100 ],
     "border": "images/UI/menu.png",
+    "menuType": 0,
 
     "buttons": [
       {
@@ -19,7 +20,7 @@
       },
       {
         "type": 0,
-        "message": "Exit",
+        "message": "Close",
         "position": [ 100, 180 ],
         "image": "images/UI/button.png"
       }
@@ -30,6 +31,7 @@
 
     "position": [ 700, 300 ],
     "border": "images/UI/menu.png",
+    "menuType": 0,
 
     "buttons": [
       {
@@ -51,5 +53,28 @@
         "image": "images/UI/button.png"
       }
     ]
+  },
+
+  "chat1": {
+    "position": [ 0, 300 ],
+    "border": "images/UI/menu.png",
+    "menuType": 1,
+    "text": [
+      "Omg there is going to be so much text in this game.",
+      "like can you imagine all the possible text",
+      "...",
+      "...",
+      "sus"
+    ]
+
+  },
+  "chat2": {
+    "position": [ 0, 300 ],
+    "border": "images/UI/menu.png",
+    "menuType": 1,
+    "text": [
+      "Day is over"
+    ]
+
   }
 }

@@ -50,7 +50,7 @@ void borders_onCollide(Entity* ent, border *bord);
 /*
 * @brief frees all the borders that are inuse
 */
-void border_free_all();
+void border_free_all(border* bord);
 
 
 #endif

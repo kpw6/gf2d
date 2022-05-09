@@ -29,8 +29,7 @@
     }
   ],
   "entities": [
-    "player",
-    "MONSTER_SQUIRTLE"
+    "player"
   ]
 
 }

@@ -89,16 +89,19 @@ void borders_onCollide(Entity* ent, border* bord) {
 			pushback_entity_on_border(ent, bord);
 			break;
 		case BORDER_TELEPORT:
+			slog("what");
 			if(ent->isPlayer) {
+				slog("hello");
+				slog("Border touched: %s", bord->filename);
 				level_switch(bord->filename, bord);
 			}
 			break;
 	}
 }
 
-void border_free_all() {
+void border_free_all(border* bord) {
 	for (int i = 0; i < BM.border_count; i++) {
-		if (BM.border_list[i].inuse) {
+		if (BM.border_list[i].inuse && &BM.border_list[i] != bord) {
 			borders_free(&BM.border_list[i]);
 		}
 	}

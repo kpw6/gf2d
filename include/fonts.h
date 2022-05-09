@@ -14,6 +14,6 @@ void fonts_init();
 
 void fonts_close(TTF_Font* font);
 
-void fonts_draw(char* text, SDL_Rect position, SDL_Texture* texture);
+void fonts_draw(SDL_Rect position, SDL_Texture* texture);
 
 #endif

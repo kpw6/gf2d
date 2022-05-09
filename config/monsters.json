@@ -1,8 +1,14 @@
 {
+  "MONSTER_HOPPIP": {
+    "image": "images/Hoppip.png",
+    "health": 20,
+    "position": [ 200, 300 ],
+    "attack": "bubble"
+  },
   "MONSTER_SQUIRTLE": {
     "image": "images/Squirtle.png",
     "health": 20,
-    "position": [500, 500],
+    "position": [ 500, 500 ],
     "attack": "bubble"
   }
 }

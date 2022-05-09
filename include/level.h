@@ -70,7 +70,7 @@ void level_update();
 
 void level_entity_load(SJson *json);
 
-void level_unload();
+void level_unload(border* bord);
 
 /*
 * @brief makes a smooth transition between levels
